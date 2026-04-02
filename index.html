@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allergen Detector</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --border-color: #444;
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --text: #e0e0e0;
+    --accent: #0f3460;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background: var(--surface);
+    border-bottom: 1px solid #333;
+  }
+  header h1 { font-size: 1.4rem; font-weight: 600; }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+  }
+
+  /* Camera viewport */
+  .camera-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border: 4px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+    transition: border-color 0.3s ease;
+  }
+  .camera-wrap.safe  { border-color: #2ecc71; box-shadow: 0 0 20px rgba(46,204,113,0.3); }
+  .camera-wrap.danger { border-color: #e74c3c; box-shadow: 0 0 20px rgba(231,76,60,0.4); }
+
+  video, .camera-wrap canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .camera-wrap canvas { display: none; }
+  .camera-wrap.frozen video { display: none; }
+  .camera-wrap.frozen canvas { display: block; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .controls button {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  #btnScan { background: #e74c3c; color: #fff; }
+  #btnReset { background: #555; color: #fff; }
+
+  /* Status */
+  .status {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    min-height: 3rem;
+  }
+
+  /* Results */
+  .results {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--surface);
+    display: none;
+  }
+  .results.visible { display: block; }
+  .results h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+  .results .tag {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    margin: 0.2rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .tag.found { background: rgba(231,76,60,0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+  .tag.clear { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid #2ecc71; }
+
+  /* Recognized text preview */
+  .ocr-text {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    max-height: 8rem;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: none;
+  }
+  .ocr-text.visible { display: block; }
+
+  /* Allergen list editor */
+  details {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  textarea {
+    margin-top: 0.5rem;
+    width: 100%;
+    min-height: 6rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    resize: vertical;
+  }
+
+  /* Loading overlay */
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .loading-overlay.hidden { display: none; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Allergen Detector</h1>
+</header>
+
+<main>
+  <div class="camera-wrap" id="cameraWrap">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="snapshot"></canvas>
+    <div class="loading-overlay hidden" id="loader">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="btnScan" disabled>Scan for Allergens</button>
+    <button id="btnReset">Reset</button>
+  </div>
+
+  <div class="status" id="status">Starting camera&hellip;</div>
+
+  <div class="results" id="results"></div>
+
+  <div class="ocr-text" id="ocrText"></div>
+
+  <details>
+    <summary>Edit allergen list</summary>
+    <textarea id="allergenInput">milk
+egg
+eggs
+peanut
+peanuts
+tree nut
+tree nuts
+almond
+almonds
+cashew
+cashews
+walnut
+walnuts
+pecan
+pecans
+pistachio
+pistachios
+hazelnut
+hazelnuts
+macadamia
+wheat
+gluten
+soy
+soybean
+soybeans
+soya
+fish
+shellfish
+shrimp
+crab
+lobster
+sesame
+mustard
+celery
+lupin
+lupine
+molluscs
+mollusks
+sulphite
+sulfite
+sulphites
+sulfites
+lactose
+casein
+whey</textarea>
+  </details>
+</main>
+
+<footer>Uses device camera &amp; Tesseract.js for OCR. No data leaves your device.</footer>
+
+<script type="module">
+// ── Tesseract.js from CDN (only external dependency) ──
+import Tesseract from 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js';
+
+const video        = document.getElementById('video');
+const canvas       = document.getElementById('snapshot');
+const ctx          = canvas.getContext('2d');
+const cameraWrap   = document.getElementById('cameraWrap');
+const btnScan      = document.getElementById('btnScan');
+const btnReset     = document.getElementById('btnReset');
+const statusEl     = document.getElementById('status');
+const resultsEl    = document.getElementById('results');
+const ocrTextEl    = document.getElementById('ocrText');
+const allergenInput= document.getElementById('allergenInput');
+const loader       = document.getElementById('loader');
+
+let stream = null;
+
+// ── Allergen helpers ──
+function getAllergens() {
+  return allergenInput.value
+    .split('\n')
+    .map(s => s.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function findAllergens(text) {
+  const lower = text.toLowerCase();
+  const allergens = getAllergens();
+  const found = [];
+  for (const a of allergens) {
+    // word-boundary match so "wheat" doesn't match inside "buckwheat"
+    const re = new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+    if (re.test(lower)) found.push(a);
+  }
+  // deduplicate (e.g. "egg" and "eggs" both matched)
+  return [...new Set(found)];
+}
+
+// ── Camera ──
+async function startCamera() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
+      audio: false
+    });
+    video.srcObject = stream;
+    await video.play();
+    btnScan.disabled = false;
+    statusEl.textContent = 'Camera ready. Point at an ingredient list and tap "Scan".';
+  } catch (err) {
+    statusEl.textContent = `Camera error: ${err.message}. Please allow camera access and reload.`;
+  }
+}
+
+function captureFrame() {
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
+  cameraWrap.classList.add('frozen');
+}
+
+// ── OCR + detection ──
+async function scan() {
+  btnScan.disabled = true;
+  loader.classList.remove('hidden');
+  cameraWrap.classList.remove('safe', 'danger');
+  resultsEl.classList.remove('visible');
+  ocrTextEl.classList.remove('visible');
+  statusEl.textContent = 'Recognizing text (this may take a few seconds)…';
+
+  captureFrame();
+
+  try {
+    const { data } = await Tesseract.recognize(canvas, 'eng', {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          const pct = Math.round((m.progress || 0) * 100);
+          statusEl.textContent = `Recognizing text… ${pct}%`;
+        }
+      }
+    });
+
+    const text = data.text.trim();
+    if (!text) {
+      statusEl.textContent = 'No text detected. Try moving closer or improving lighting.';
+      cameraWrap.classList.remove('safe', 'danger');
+      btnScan.disabled = false;
+      loader.classList.add('hidden');
+      return;
+    }
+
+    ocrTextEl.textContent = text;
+    ocrTextEl.classList.add('visible');
+
+    const found = findAllergens(text);
+
+    if (found.length > 0) {
+      cameraWrap.classList.add('danger');
+      statusEl.textContent = `Allergens detected (${found.length})!`;
+      resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
+        found.map(a => `<span class="tag found">${a}</span>`).join('');
+    } else {
+      cameraWrap.classList.add('safe');
+      statusEl.textContent = 'No allergens detected.';
+      resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
+    }
+    resultsEl.classList.add('visible');
+  } catch (err) {
+    statusEl.textContent = `OCR error: ${err.message}`;
+  } finally {
+    loader.classList.add('hidden');
+    btnScan.disabled = false;
+  }
+}
+
+function reset() {
+  cameraWrap.classList.remove('frozen', 'safe', 'danger');
+  resultsEl.classList.remove('visible');
+  ocrTextEl.classList.remove('visible');
+  statusEl.textContent = 'Camera ready. Point at an ingredient list and tap "Scan".';
+}
+
+// ── Events ──
+btnScan.addEventListener('click', scan);
+btnReset.addEventListener('click', reset);
+
+// ── Init ──
+startCamera();
+</script>
+</body>
+</html>
