@@ -337,6 +337,66 @@ function captureFrame() {
   cameraWrap.classList.add('frozen');
 }
 
+// ── Image preprocessing for better OCR ──
+function preprocessCanvas() {
+  const w = canvas.width;
+  const h = canvas.height;
+
+  // 1. Upscale small images — Tesseract needs ~300 DPI equivalent
+  const MIN_WIDTH = 1500;
+  if (w < MIN_WIDTH) {
+    const scale = MIN_WIDTH / w;
+    const upCanvas = document.createElement('canvas');
+    upCanvas.width = Math.round(w * scale);
+    upCanvas.height = Math.round(h * scale);
+    const upCtx = upCanvas.getContext('2d');
+    upCtx.imageSmoothingEnabled = true;
+    upCtx.imageSmoothingQuality = 'high';
+    upCtx.drawImage(canvas, 0, 0, upCanvas.width, upCanvas.height);
+    canvas.width = upCanvas.width;
+    canvas.height = upCanvas.height;
+    ctx.drawImage(upCanvas, 0, 0);
+  }
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const d = imageData.data;
+
+  // 2. Convert to grayscale
+  for (let i = 0; i < d.length; i += 4) {
+    const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    d[i] = d[i + 1] = d[i + 2] = gray;
+  }
+
+  // 3. Compute histogram for Otsu's threshold
+  const hist = new Uint32Array(256);
+  for (let i = 0; i < d.length; i += 4) hist[d[i]]++;
+
+  const totalPixels = d.length / 4;
+  let sum = 0;
+  for (let i = 0; i < 256; i++) sum += i * hist[i];
+
+  let sumB = 0, wB = 0, maxVariance = 0, threshold = 128;
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t];
+    if (wB === 0) continue;
+    const wF = totalPixels - wB;
+    if (wF === 0) break;
+    sumB += t * hist[t];
+    const mB = sumB / wB;
+    const mF = (sum - sumB) / wF;
+    const variance = wB * wF * (mB - mF) * (mB - mF);
+    if (variance > maxVariance) { maxVariance = variance; threshold = t; }
+  }
+
+  // 4. Apply binary threshold (black text on white background)
+  for (let i = 0; i < d.length; i += 4) {
+    const v = d[i] < threshold ? 0 : 255;
+    d[i] = d[i + 1] = d[i + 2] = v;
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+}
+
 // ── Load uploaded image onto canvas ──
 function loadImageToCanvas(file) {
   return new Promise((resolve, reject) => {
@@ -360,8 +420,12 @@ async function runOCR() {
   cameraWrap.classList.remove('safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
-  statusEl.textContent = 'Recognizing text (this may take a few seconds)…';
+  statusEl.textContent = 'Preprocessing image…';
   btnScan.disabled = true;
+
+  // Preprocess for better OCR accuracy
+  preprocessCanvas();
+  statusEl.textContent = 'Recognizing text (this may take a few seconds)…';
 
   try {
     const { data } = await Tesseract.recognize(canvas, 'eng', {
