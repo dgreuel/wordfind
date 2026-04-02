@@ -90,7 +90,9 @@
   .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
 
   #btnScan { background: #e74c3c; color: #fff; }
+  #btnUpload { background: var(--accent); color: #fff; }
   #btnReset { background: #555; color: #fff; }
+  #fileInput { display: none; }
 
   /* Status */
   .status {
@@ -206,11 +208,13 @@
   </div>
 
   <div class="controls">
-    <button id="btnScan" disabled>Scan for Allergens</button>
+    <button id="btnScan" disabled>Scan Camera</button>
+    <button id="btnUpload">Upload Image</button>
     <button id="btnReset">Reset</button>
+    <input type="file" id="fileInput" accept="image/*">
   </div>
 
-  <div class="status" id="status">Starting camera&hellip;</div>
+  <div class="status" id="status">Starting camera&hellip; You can also upload an image.</div>
 
   <div class="results" id="results"></div>
 
@@ -277,6 +281,8 @@ const canvas       = document.getElementById('snapshot');
 const ctx          = canvas.getContext('2d');
 const cameraWrap   = document.getElementById('cameraWrap');
 const btnScan      = document.getElementById('btnScan');
+const btnUpload    = document.getElementById('btnUpload');
+const fileInput    = document.getElementById('fileInput');
 const btnReset     = document.getElementById('btnReset');
 const statusEl     = document.getElementById('status');
 const resultsEl    = document.getElementById('results');
@@ -285,6 +291,7 @@ const allergenInput= document.getElementById('allergenInput');
 const loader       = document.getElementById('loader');
 
 let stream = null;
+let imageSource = null; // 'camera' | 'upload'
 
 // ── Allergen helpers ──
 function getAllergens() {
@@ -317,9 +324,9 @@ async function startCamera() {
     video.srcObject = stream;
     await video.play();
     btnScan.disabled = false;
-    statusEl.textContent = 'Camera ready. Point at an ingredient list and tap "Scan".';
+    statusEl.textContent = 'Camera ready. Point at an ingredient list and tap "Scan Camera", or upload an image.';
   } catch (err) {
-    statusEl.textContent = `Camera error: ${err.message}. Please allow camera access and reload.`;
+    statusEl.textContent = 'No camera available. Upload an image to scan for allergens.';
   }
 }
 
@@ -330,16 +337,31 @@ function captureFrame() {
   cameraWrap.classList.add('frozen');
 }
 
+// ── Load uploaded image onto canvas ──
+function loadImageToCanvas(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0);
+      cameraWrap.classList.add('frozen');
+      URL.revokeObjectURL(img.src);
+      resolve();
+    };
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 // ── OCR + detection ──
-async function scan() {
-  btnScan.disabled = true;
+async function runOCR() {
   loader.classList.remove('hidden');
   cameraWrap.classList.remove('safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
   statusEl.textContent = 'Recognizing text (this may take a few seconds)…';
-
-  captureFrame();
+  btnScan.disabled = true;
 
   try {
     const { data } = await Tesseract.recognize(canvas, 'eng', {
@@ -355,8 +377,6 @@ async function scan() {
     if (!text) {
       statusEl.textContent = 'No text detected. Try moving closer or improving lighting.';
       cameraWrap.classList.remove('safe', 'danger');
-      btnScan.disabled = false;
-      loader.classList.add('hidden');
       return;
     }
 
@@ -380,7 +400,21 @@ async function scan() {
     statusEl.textContent = `OCR error: ${err.message}`;
   } finally {
     loader.classList.add('hidden');
-    btnScan.disabled = false;
+    btnScan.disabled = !stream;
+  }
+}
+
+async function scanCamera() {
+  captureFrame();
+  await runOCR();
+}
+
+async function scanUpload(file) {
+  try {
+    await loadImageToCanvas(file);
+    await runOCR();
+  } catch (err) {
+    statusEl.textContent = `Upload error: ${err.message}`;
   }
 }
 
@@ -388,11 +422,18 @@ function reset() {
   cameraWrap.classList.remove('frozen', 'safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
-  statusEl.textContent = 'Camera ready. Point at an ingredient list and tap "Scan".';
+  fileInput.value = '';
+  statusEl.textContent = stream
+    ? 'Camera ready. Point at an ingredient list and tap "Scan Camera", or upload an image.'
+    : 'Upload an image to scan for allergens.';
 }
 
 // ── Events ──
-btnScan.addEventListener('click', scan);
+btnScan.addEventListener('click', scanCamera);
+btnUpload.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) scanUpload(fileInput.files[0]);
+});
 btnReset.addEventListener('click', reset);
 
 // ── Init ──
