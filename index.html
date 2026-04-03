@@ -353,10 +353,24 @@
     <summary>API settings</summary>
     <label class="setting-label">Model</label>
     <select id="modelSelect">
-      <option value="qwen/qwen2.5-vl-32b-instruct:free">Qwen 2.5 VL 32B (free)</option>
-      <option value="qwen/qwen3-vl-8b-instruct">Qwen 3 VL 8B ($0.08 input)</option>
-      <option value="qwen/qwen2.5-vl-72b-instruct">Qwen 2.5 VL 72B (best accuracy)</option>
-      <option value="google/gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
+      <optgroup label="Free">
+        <option value="qwen/qwen2.5-vl-32b-instruct:free">Qwen 2.5 VL 32B</option>
+        <option value="meta-llama/llama-4-scout:free">Llama 4 Scout</option>
+        <option value="google/gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash Preview</option>
+      </optgroup>
+      <optgroup label="Low cost">
+        <option value="qwen/qwen3-vl-8b-instruct">Qwen 3 VL 8B ($0.08/M in)</option>
+        <option value="google/gemini-2.5-flash-image">Gemini 2.5 Flash Image ($0.10/M in)</option>
+        <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash ($0.10/M in)</option>
+        <option value="meta-llama/llama-4-scout">Llama 4 Scout ($0.15/M in)</option>
+        <option value="mistralai/mistral-small-3.2-24b-instruct">Mistral Small 3.2 ($0.10/M in)</option>
+      </optgroup>
+      <optgroup label="Best accuracy">
+        <option value="qwen/qwen2.5-vl-72b-instruct">Qwen 2.5 VL 72B ($0.40/M in)</option>
+        <option value="google/gemini-2.5-pro-preview-03-25">Gemini 2.5 Pro ($1.25/M in)</option>
+        <option value="anthropic/claude-sonnet-4">Claude Sonnet 4 ($3/M in)</option>
+        <option value="openai/gpt-4.1-mini">GPT-4.1 Mini ($0.40/M in)</option>
+      </optgroup>
     </select>
     <label class="setting-label">API key</label>
     <input type="password" id="apiKeyInput" placeholder="OpenRouter API key (sk-or-v1-…)">
@@ -669,8 +683,11 @@ async function runOCR() {
   btnScan.disabled = true;
   btnRescan.classList.add('hidden');
 
+  const t0 = performance.now();
+
   try {
     const text = await recognizeText();
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
 
     ocrTextEl.textContent = text;
     ocrTextEl.classList.add('visible');
@@ -679,17 +696,18 @@ async function runOCR() {
 
     if (found.length > 0) {
       cameraWrap.classList.add('danger');
-      statusEl.textContent = `Allergens detected (${found.length})!`;
+      statusEl.textContent = `Allergens detected (${found.length})! (${elapsed}s)`;
       resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
         found.map(a => `<span class="tag found">${a}</span>`).join('');
     } else {
       cameraWrap.classList.add('safe');
-      statusEl.textContent = 'No allergens detected.';
+      statusEl.textContent = `No allergens detected. (${elapsed}s)`;
       resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
     }
     resultsEl.classList.add('visible');
   } catch (err) {
-    statusEl.textContent = `Error: ${err.message}`;
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+    statusEl.textContent = `Error: ${err.message} (${elapsed}s)`;
   } finally {
     loader.classList.add('hidden');
     btnScan.disabled = !stream;
