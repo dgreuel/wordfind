@@ -836,8 +836,7 @@ async function recognizeText(modelId) {
   // Extract cost from OpenRouter response headers or usage
   const usage = result.usage || {};
   const cost = result.usage?.total_cost
-    ?? parseFloat(response.headers.get('x-openrouter-cost') || '0')
-    || null;
+    ?? (parseFloat(response.headers.get('x-openrouter-cost') || '0') || null);
 
   return { text, usage, cost, model: result.model || modelId };
 }
