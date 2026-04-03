@@ -141,6 +141,65 @@
   }
   .ocr-text.visible { display: block; }
 
+  /* Smart routing step log */
+  .step-log {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .step-log.visible { display: flex; }
+  .step-entry {
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    background: var(--surface);
+    border-left: 3px solid #444;
+    font-size: 0.85rem;
+  }
+  .step-entry.running { border-left-color: #e67e22; }
+  .step-entry.found   { border-left-color: #e74c3c; }
+  .step-entry.clear   { border-left-color: #2ecc71; }
+  .step-entry.error   { border-left-color: #888; }
+  .step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .step-model { font-weight: 600; }
+  .step-meta {
+    font-size: 0.75rem;
+    color: #888;
+    display: flex;
+    gap: 0.6rem;
+  }
+  .step-allergens {
+    margin-top: 0.3rem;
+  }
+  .step-toggle {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: #5dade2;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+  }
+  .step-toggle:hover { text-decoration: underline; }
+  .step-text {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 6rem;
+    overflow-y: auto;
+    color: #aaa;
+    display: none;
+  }
+  .step-text.visible { display: block; }
+
   /* Settings panels */
   details {
     background: var(--surface);
@@ -336,6 +395,8 @@
 
   <div class="ocr-text" id="ocrText"></div>
 
+  <div class="step-log" id="stepLog"></div>
+
   <details>
     <summary>Allergens to detect</summary>
     <div class="allergen-toolbar">
@@ -444,6 +505,12 @@ async function fetchModels() {
 
     modelSelect.innerHTML = '';
 
+    // Add smart routing option at the top
+    const smartOpt = document.createElement('option');
+    smartOpt.value = '__smart__';
+    smartOpt.textContent = 'Smart routing (free → cheap → mid)';
+    modelSelect.appendChild(smartOpt);
+
     const addGroup = (label, items) => {
       if (items.length === 0) return;
       const group = document.createElement('optgroup');
@@ -474,6 +541,10 @@ async function fetchModels() {
   } catch (err) {
     // Fallback to a small hardcoded list if API fails
     modelSelect.innerHTML = '';
+    const smartFallback = document.createElement('option');
+    smartFallback.value = '__smart__';
+    smartFallback.textContent = 'Smart routing (free → cheap → mid)';
+    modelSelect.appendChild(smartFallback);
     const fallback = [
       ['Free', [
         ['qwen/qwen2.5-vl-32b-instruct:free', 'Qwen 2.5 VL 32B (free)'],
@@ -710,14 +781,20 @@ function loadImageToCanvas(file) {
 }
 
 // ── AI Vision OCR via OpenRouter ──
-async function recognizeText() {
+let cachedBase64 = null;
+
+function getBase64Image() {
+  if (!cachedBase64) cachedBase64 = canvas.toDataURL('image/jpeg', 0.9);
+  return cachedBase64;
+}
+
+async function recognizeText(modelId) {
   const apiKey = apiKeyInput.value.trim();
   if (!apiKey) {
     throw new Error('No API key. Open "API settings" below and paste your OpenRouter key.');
   }
 
-  // Convert canvas to base64 JPEG (smaller than PNG for network transfer)
-  const base64 = canvas.toDataURL('image/jpeg', 0.9);
+  const base64 = getBase64Image();
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -726,7 +803,7 @@ async function recognizeText() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: modelSelect.value,
+      model: modelId,
       messages: [
         {
           role: 'user',
@@ -755,38 +832,136 @@ async function recognizeText() {
   const result = await response.json();
   const text = result.choices?.[0]?.message?.content?.trim();
   if (!text) throw new Error('Model returned empty response');
-  return text;
+
+  // Extract cost from OpenRouter response headers or usage
+  const usage = result.usage || {};
+  const cost = result.usage?.total_cost
+    ?? parseFloat(response.headers.get('x-openrouter-cost') || '0')
+    || null;
+
+  return { text, usage, cost, model: result.model || modelId };
 }
 
-// ── OCR + detection ──
+// ── Smart routing models (picked from each tier) ──
+const SMART_ROUTE_TIERS = [
+  { label: 'Free',     models: ['qwen/qwen2.5-vl-32b-instruct:free', 'meta-llama/llama-4-scout:free'] },
+  { label: 'Low cost', models: ['qwen/qwen3-vl-8b-instruct', 'google/gemini-2.5-flash-image'] },
+  { label: 'Mid range', models: ['qwen/qwen2.5-vl-72b-instruct', 'google/gemini-2.5-pro-preview-03-25'] },
+];
+
+function pickSmartModels() {
+  // Use the first available model from each tier
+  // (In future this could check the fetched model list)
+  return SMART_ROUTE_TIERS.map(tier => ({
+    label: tier.label,
+    model: tier.models[0],
+  }));
+}
+
+// ── Step log UI ──
+const stepLog = document.getElementById('stepLog');
+
+function clearStepLog() {
+  stepLog.innerHTML = '';
+  stepLog.classList.remove('visible');
+}
+
+function addStepEntry(modelId, label) {
+  const entry = document.createElement('div');
+  entry.className = 'step-entry running';
+  entry.innerHTML = `
+    <div class="step-header">
+      <span class="step-model">${label}: ${modelId}</span>
+      <span class="step-meta"><span class="step-time">running…</span></span>
+    </div>`;
+  stepLog.appendChild(entry);
+  stepLog.classList.add('visible');
+  return entry;
+}
+
+function updateStepEntry(entry, { elapsed, cost, found, text, error }) {
+  entry.classList.remove('running');
+
+  const meta = entry.querySelector('.step-meta');
+  const parts = [`${elapsed}s`];
+  if (cost !== null && cost !== undefined && cost > 0) {
+    parts.push(`$${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}`);
+  }
+  meta.innerHTML = parts.map(p => `<span>${p}</span>`).join('');
+
+  if (error) {
+    entry.classList.add('error');
+    const errEl = document.createElement('div');
+    errEl.className = 'step-allergens';
+    errEl.innerHTML = `<span class="tag found" style="border-color:#888;color:#888;background:rgba(136,136,136,0.15)">Error: ${error}</span>`;
+    entry.appendChild(errEl);
+    return;
+  }
+
+  if (found.length > 0) {
+    entry.classList.add('found');
+    const allergenDiv = document.createElement('div');
+    allergenDiv.className = 'step-allergens';
+    allergenDiv.innerHTML = found.map(a => `<span class="tag found">${a}</span>`).join('');
+    entry.appendChild(allergenDiv);
+  } else {
+    entry.classList.add('clear');
+    const allergenDiv = document.createElement('div');
+    allergenDiv.className = 'step-allergens';
+    allergenDiv.innerHTML = '<span class="tag clear">No allergens</span>';
+    entry.appendChild(allergenDiv);
+  }
+
+  // Add toggle to show/hide OCR text
+  const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'step-toggle';
+  toggleBtn.textContent = 'Show recognized text';
+  const textDiv = document.createElement('div');
+  textDiv.className = 'step-text';
+  textDiv.textContent = text;
+  toggleBtn.addEventListener('click', () => {
+    const open = textDiv.classList.toggle('visible');
+    toggleBtn.textContent = open ? 'Hide recognized text' : 'Show recognized text';
+  });
+  entry.appendChild(toggleBtn);
+  entry.appendChild(textDiv);
+}
+
+// ── Single model OCR ──
 async function runOCR() {
+  const isSmartRoute = modelSelect.value === '__smart__';
+  if (isSmartRoute) return runSmartOCR();
+
   loader.classList.remove('hidden');
   cameraWrap.classList.remove('safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
+  clearStepLog();
   statusEl.textContent = 'Sending image to AI for text recognition…';
   btnScan.disabled = true;
   btnRescan.classList.add('hidden');
+  cachedBase64 = null;
 
   const t0 = performance.now();
 
   try {
-    const text = await recognizeText();
+    const { text, cost } = await recognizeText(modelSelect.value);
     const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
 
     ocrTextEl.textContent = text;
     ocrTextEl.classList.add('visible');
 
     const found = findAllergens(text);
+    const costStr = cost ? ` · $${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}` : '';
 
     if (found.length > 0) {
       cameraWrap.classList.add('danger');
-      statusEl.textContent = `Allergens detected (${found.length})! (${elapsed}s)`;
+      statusEl.textContent = `Allergens detected (${found.length})! (${elapsed}s${costStr})`;
       resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
         found.map(a => `<span class="tag found">${a}</span>`).join('');
     } else {
       cameraWrap.classList.add('safe');
-      statusEl.textContent = `No allergens detected. (${elapsed}s)`;
+      statusEl.textContent = `No allergens detected. (${elapsed}s${costStr})`;
       resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
     }
     resultsEl.classList.add('visible');
@@ -798,6 +973,67 @@ async function runOCR() {
     btnScan.disabled = !stream;
     btnRescan.classList.remove('hidden');
   }
+}
+
+// ── Smart routing OCR ──
+async function runSmartOCR() {
+  loader.classList.remove('hidden');
+  cameraWrap.classList.remove('safe', 'danger');
+  resultsEl.classList.remove('visible');
+  ocrTextEl.classList.remove('visible');
+  clearStepLog();
+  statusEl.textContent = 'Smart scan: escalating through model tiers…';
+  btnScan.disabled = true;
+  btnRescan.classList.add('hidden');
+  cachedBase64 = null;
+
+  const tiers = pickSmartModels();
+  let allergenResult = null;
+  let totalCost = 0;
+  const t0Global = performance.now();
+
+  for (const tier of tiers) {
+    const entry = addStepEntry(tier.model, tier.label);
+    const t0 = performance.now();
+
+    try {
+      statusEl.textContent = `Smart scan: trying ${tier.label} tier (${tier.model})…`;
+      const { text, cost } = await recognizeText(tier.model);
+      const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+      if (cost) totalCost += cost;
+
+      const found = findAllergens(text);
+      updateStepEntry(entry, { elapsed, cost, found, text });
+
+      if (found.length > 0) {
+        allergenResult = { found, text, tier: tier.label, model: tier.model };
+        break; // Stop escalating — allergens found
+      }
+    } catch (err) {
+      const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+      updateStepEntry(entry, { elapsed, cost: null, found: [], text: '', error: err.message });
+      // Continue to next tier on error
+    }
+  }
+
+  const totalElapsed = ((performance.now() - t0Global) / 1000).toFixed(1);
+  const costStr = totalCost > 0 ? ` · total $${totalCost < 0.001 ? totalCost.toFixed(6) : totalCost.toFixed(4)}` : '';
+
+  if (allergenResult) {
+    cameraWrap.classList.add('danger');
+    statusEl.textContent = `Allergens found by ${allergenResult.tier} tier! (${totalElapsed}s${costStr})`;
+    resultsEl.innerHTML = `<h3>Allergens found (${allergenResult.model}):</h3>` +
+      allergenResult.found.map(a => `<span class="tag found">${a}</span>`).join('');
+  } else {
+    cameraWrap.classList.add('safe');
+    statusEl.textContent = `No allergens detected across all tiers. (${totalElapsed}s${costStr})`;
+    resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found (checked ${tiers.length} models)</span>`;
+  }
+  resultsEl.classList.add('visible');
+
+  loader.classList.add('hidden');
+  btnScan.disabled = !stream;
+  btnRescan.classList.remove('hidden');
 }
 
 async function scanCamera() {
@@ -818,7 +1054,9 @@ function reset() {
   cameraWrap.classList.remove('frozen', 'safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
+  clearStepLog();
   btnRescan.classList.add('hidden');
+  cachedBase64 = null;
   fileInput.value = '';
   statusEl.textContent = stream
     ? 'Camera ready. Point at an ingredient list and tap "Scan Camera", or upload an image.'
