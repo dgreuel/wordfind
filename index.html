@@ -139,7 +139,7 @@
   }
   .ocr-text.visible { display: block; }
 
-  /* Allergen list editor */
+  /* Settings panels */
   details {
     background: var(--surface);
     border-radius: 8px;
@@ -150,10 +150,9 @@
     font-weight: 600;
     font-size: 0.95rem;
   }
-  textarea {
+  textarea, details input[type="password"] {
     margin-top: 0.5rem;
     width: 100%;
-    min-height: 6rem;
     padding: 0.5rem;
     border-radius: 6px;
     border: 1px solid #444;
@@ -161,8 +160,17 @@
     color: var(--text);
     font-family: inherit;
     font-size: 0.85rem;
+  }
+  textarea {
+    min-height: 6rem;
     resize: vertical;
   }
+  .key-status {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  .key-status.ok { color: #2ecc71; }
 
   /* Loading overlay */
   .loading-overlay {
@@ -268,13 +276,17 @@ lactose
 casein
 whey</textarea>
   </details>
+
+  <details>
+    <summary>API settings</summary>
+    <input type="password" id="apiKeyInput" placeholder="OpenRouter API key (sk-or-v1-…)">
+    <div class="key-status" id="keyStatus">No API key saved.</div>
+  </details>
 </main>
 
-<footer>Uses device camera &amp; Tesseract.js for OCR. No data leaves your device.</footer>
+<footer>Uses AI vision via OpenRouter for OCR. Image is sent to the API for processing.</footer>
 
 <script type="module">
-// ── Tesseract.js from CDN (only external dependency) ──
-import Tesseract from 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js';
 
 const video        = document.getElementById('video');
 const canvas       = document.getElementById('snapshot');
@@ -289,9 +301,40 @@ const resultsEl    = document.getElementById('results');
 const ocrTextEl    = document.getElementById('ocrText');
 const allergenInput= document.getElementById('allergenInput');
 const loader       = document.getElementById('loader');
+const apiKeyInput  = document.getElementById('apiKeyInput');
+const keyStatus    = document.getElementById('keyStatus');
 
 let stream = null;
-let imageSource = null; // 'camera' | 'upload'
+
+// ── API key management (localStorage, never committed) ──
+const STORAGE_KEY = 'openrouter_api_key';
+
+function loadApiKey() {
+  const saved = localStorage.getItem(STORAGE_KEY) || '';
+  apiKeyInput.value = saved;
+  updateKeyStatus();
+}
+
+function updateKeyStatus() {
+  const key = apiKeyInput.value.trim();
+  if (key) {
+    keyStatus.textContent = 'API key saved.';
+    keyStatus.classList.add('ok');
+  } else {
+    keyStatus.textContent = 'No API key saved. Enter your OpenRouter key above.';
+    keyStatus.classList.remove('ok');
+  }
+}
+
+apiKeyInput.addEventListener('input', () => {
+  const key = apiKeyInput.value.trim();
+  if (key) {
+    localStorage.setItem(STORAGE_KEY, key);
+  } else {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  updateKeyStatus();
+});
 
 // ── Allergen helpers ──
 function getAllergens() {
@@ -306,11 +349,9 @@ function findAllergens(text) {
   const allergens = getAllergens();
   const found = [];
   for (const a of allergens) {
-    // word-boundary match so "wheat" doesn't match inside "buckwheat"
     const re = new RegExp(`\\b${a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
     if (re.test(lower)) found.push(a);
   }
-  // deduplicate (e.g. "egg" and "eggs" both matched)
   return [...new Set(found)];
 }
 
@@ -337,66 +378,6 @@ function captureFrame() {
   cameraWrap.classList.add('frozen');
 }
 
-// ── Image preprocessing for better OCR ──
-function preprocessCanvas() {
-  const w = canvas.width;
-  const h = canvas.height;
-
-  // 1. Upscale small images — Tesseract needs ~300 DPI equivalent
-  const MIN_WIDTH = 1500;
-  if (w < MIN_WIDTH) {
-    const scale = MIN_WIDTH / w;
-    const upCanvas = document.createElement('canvas');
-    upCanvas.width = Math.round(w * scale);
-    upCanvas.height = Math.round(h * scale);
-    const upCtx = upCanvas.getContext('2d');
-    upCtx.imageSmoothingEnabled = true;
-    upCtx.imageSmoothingQuality = 'high';
-    upCtx.drawImage(canvas, 0, 0, upCanvas.width, upCanvas.height);
-    canvas.width = upCanvas.width;
-    canvas.height = upCanvas.height;
-    ctx.drawImage(upCanvas, 0, 0);
-  }
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const d = imageData.data;
-
-  // 2. Convert to grayscale
-  for (let i = 0; i < d.length; i += 4) {
-    const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-    d[i] = d[i + 1] = d[i + 2] = gray;
-  }
-
-  // 3. Compute histogram for Otsu's threshold
-  const hist = new Uint32Array(256);
-  for (let i = 0; i < d.length; i += 4) hist[d[i]]++;
-
-  const totalPixels = d.length / 4;
-  let sum = 0;
-  for (let i = 0; i < 256; i++) sum += i * hist[i];
-
-  let sumB = 0, wB = 0, maxVariance = 0, threshold = 128;
-  for (let t = 0; t < 256; t++) {
-    wB += hist[t];
-    if (wB === 0) continue;
-    const wF = totalPixels - wB;
-    if (wF === 0) break;
-    sumB += t * hist[t];
-    const mB = sumB / wB;
-    const mF = (sum - sumB) / wF;
-    const variance = wB * wF * (mB - mF) * (mB - mF);
-    if (variance > maxVariance) { maxVariance = variance; threshold = t; }
-  }
-
-  // 4. Apply binary threshold (black text on white background)
-  for (let i = 0; i < d.length; i += 4) {
-    const v = d[i] < threshold ? 0 : 255;
-    d[i] = d[i + 1] = d[i + 2] = v;
-  }
-
-  ctx.putImageData(imageData, 0, 0);
-}
-
 // ── Load uploaded image onto canvas ──
 function loadImageToCanvas(file) {
   return new Promise((resolve, reject) => {
@@ -414,35 +395,66 @@ function loadImageToCanvas(file) {
   });
 }
 
+// ── AI Vision OCR via OpenRouter ──
+async function recognizeText() {
+  const apiKey = apiKeyInput.value.trim();
+  if (!apiKey) {
+    throw new Error('No API key. Open "API settings" below and paste your OpenRouter key.');
+  }
+
+  // Convert canvas to base64 JPEG (smaller than PNG for network transfer)
+  const base64 = canvas.toDataURL('image/jpeg', 0.9);
+
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'qwen/qwen3.6-plus:free',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: 'Extract ALL text from this image exactly as written. This is a food ingredient label. Output ONLY the raw text, nothing else — no commentary, no formatting, no markdown. Preserve line breaks where they appear.'
+            },
+            {
+              type: 'image_url',
+              image_url: { url: base64 }
+            }
+          ]
+        }
+      ],
+      max_tokens: 1024,
+      temperature: 0,
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${response.status}`);
+  }
+
+  const result = await response.json();
+  const text = result.choices?.[0]?.message?.content?.trim();
+  if (!text) throw new Error('Model returned empty response');
+  return text;
+}
+
 // ── OCR + detection ──
 async function runOCR() {
   loader.classList.remove('hidden');
   cameraWrap.classList.remove('safe', 'danger');
   resultsEl.classList.remove('visible');
   ocrTextEl.classList.remove('visible');
-  statusEl.textContent = 'Preprocessing image…';
+  statusEl.textContent = 'Sending image to AI for text recognition…';
   btnScan.disabled = true;
 
-  // Preprocess for better OCR accuracy
-  preprocessCanvas();
-  statusEl.textContent = 'Recognizing text (this may take a few seconds)…';
-
   try {
-    const { data } = await Tesseract.recognize(canvas, 'eng', {
-      logger: m => {
-        if (m.status === 'recognizing text') {
-          const pct = Math.round((m.progress || 0) * 100);
-          statusEl.textContent = `Recognizing text… ${pct}%`;
-        }
-      }
-    });
-
-    const text = data.text.trim();
-    if (!text) {
-      statusEl.textContent = 'No text detected. Try moving closer or improving lighting.';
-      cameraWrap.classList.remove('safe', 'danger');
-      return;
-    }
+    const text = await recognizeText();
 
     ocrTextEl.textContent = text;
     ocrTextEl.classList.add('visible');
@@ -461,7 +473,7 @@ async function runOCR() {
     }
     resultsEl.classList.add('visible');
   } catch (err) {
-    statusEl.textContent = `OCR error: ${err.message}`;
+    statusEl.textContent = `Error: ${err.message}`;
   } finally {
     loader.classList.add('hidden');
     btnScan.disabled = !stream;
@@ -501,6 +513,7 @@ fileInput.addEventListener('change', () => {
 btnReset.addEventListener('click', reset);
 
 // ── Init ──
+loadApiKey();
 startCamera();
 </script>
 </body>
