@@ -150,8 +150,26 @@
     font-weight: 600;
     font-size: 0.95rem;
   }
+  .setting-label {
+    display: block;
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  details select {
+    margin-top: 0.3rem;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
   details input[type="password"], details input[type="text"] {
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
     width: 100%;
     padding: 0.5rem;
     border-radius: 6px;
@@ -330,6 +348,15 @@
 
   <details>
     <summary>API settings</summary>
+    <label class="setting-label">Model</label>
+    <select id="modelSelect">
+      <option value="qwen/qwen3.6-plus:free">Qwen 3.6 Plus (free, slow)</option>
+      <option value="google/gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
+      <option value="openai/gpt-5-nano">GPT-5 Nano</option>
+      <option value="qwen/qwen-turbo">Qwen Turbo</option>
+      <option value="mistralai/mistral-nemo">Mistral Nemo</option>
+    </select>
+    <label class="setting-label">API key</label>
     <input type="password" id="apiKeyInput" placeholder="OpenRouter API key (sk-or-v1-…)">
     <div class="key-status" id="keyStatus">No API key saved.</div>
   </details>
@@ -353,6 +380,7 @@ const ocrTextEl        = document.getElementById('ocrText');
 const loader           = document.getElementById('loader');
 const apiKeyInput      = document.getElementById('apiKeyInput');
 const keyStatus        = document.getElementById('keyStatus');
+const modelSelect      = document.getElementById('modelSelect');
 const allergenGrid     = document.getElementById('allergenGrid');
 const allergenCount    = document.getElementById('allergenCount');
 const newAllergenInput = document.getElementById('newAllergenInput');
@@ -361,14 +389,20 @@ const btnToggleAll     = document.getElementById('btnToggleAll');
 
 let stream = null;
 
-// ── API key management (localStorage, never committed) ──
+// ── Settings management (localStorage) ──
 const STORAGE_KEY = 'openrouter_api_key';
+const MODEL_STORAGE_KEY = 'openrouter_model';
 
-function loadApiKey() {
-  const saved = localStorage.getItem(STORAGE_KEY) || '';
-  apiKeyInput.value = saved;
+function loadSettings() {
+  apiKeyInput.value = localStorage.getItem(STORAGE_KEY) || '';
+  const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+  if (savedModel) modelSelect.value = savedModel;
   updateKeyStatus();
 }
+
+modelSelect.addEventListener('change', () => {
+  localStorage.setItem(MODEL_STORAGE_KEY, modelSelect.value);
+});
 
 function updateKeyStatus() {
   const key = apiKeyInput.value.trim();
@@ -590,7 +624,7 @@ async function recognizeText() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'qwen/qwen3.6-plus:free',
+      model: modelSelect.value,
       messages: [
         {
           role: 'user',
@@ -692,7 +726,7 @@ btnReset.addEventListener('click', reset);
 
 // ── Init ──
 loadAllergens();
-loadApiKey();
+loadSettings();
 startCamera();
 </script>
 </body>
