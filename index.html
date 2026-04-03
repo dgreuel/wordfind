@@ -470,18 +470,12 @@ async function fetchModels() {
   const headers = apiKey ? { Authorization: `Bearer ${apiKey}` } : {};
 
   try {
-    const res = await fetch('https://openrouter.ai/api/v1/models', { headers });
+    const res = await fetch('https://openrouter.ai/api/v1/models?supported_parameters=images', { headers });
     if (!res.ok) throw new Error(`${res.status}`);
     const { data } = await res.json();
 
-    // Filter to models that support image input
-    const visionModels = data.filter(m =>
-      m.architecture?.modality?.includes('image') ||
-      m.supported_parameters?.includes('images') ||
-      (m.architecture?.input_modalities && m.architecture.input_modalities.includes('image'))
-    );
-
-    // Sort by input price
+    // API already filtered to image-capable models; sort by input price
+    const visionModels = data;
     visionModels.sort((a, b) => {
       const pa = parseFloat(a.pricing?.prompt || '999');
       const pb = parseFloat(b.pricing?.prompt || '999');
@@ -843,19 +837,10 @@ async function recognizeText(modelId) {
 
 // ── Smart routing models (picked from each tier) ──
 const SMART_ROUTE_TIERS = [
-  { label: 'Free',     models: ['qwen/qwen2.5-vl-32b-instruct:free', 'meta-llama/llama-4-scout:free'] },
-  { label: 'Low cost', models: ['qwen/qwen3-vl-8b-instruct', 'google/gemini-2.5-flash-image'] },
-  { label: 'Mid range', models: ['qwen/qwen2.5-vl-72b-instruct', 'google/gemini-2.5-pro-preview-03-25'] },
+  { label: 'Free',     model: 'openrouter/auto:free' },
+  { label: 'Low cost', model: 'qwen/qwen3-vl-8b-instruct' },
+  { label: 'Mid range', model: 'qwen/qwen2.5-vl-72b-instruct' },
 ];
-
-function pickSmartModels() {
-  // Use the first available model from each tier
-  // (In future this could check the fetched model list)
-  return SMART_ROUTE_TIERS.map(tier => ({
-    label: tier.label,
-    model: tier.models[0],
-  }));
-}
 
 // ── Step log UI ──
 const stepLog = document.getElementById('stepLog');
@@ -870,7 +855,7 @@ function addStepEntry(modelId, label) {
   entry.className = 'step-entry running';
   entry.innerHTML = `
     <div class="step-header">
-      <span class="step-model">${label}: ${modelId}</span>
+      <span class="step-model">${label}: <span class="step-model-name">${modelId}</span></span>
       <span class="step-meta"><span class="step-time">running…</span></span>
     </div>`;
   stepLog.appendChild(entry);
@@ -878,8 +863,11 @@ function addStepEntry(modelId, label) {
   return entry;
 }
 
-function updateStepEntry(entry, { elapsed, cost, found, text, error }) {
+function updateStepEntry(entry, { elapsed, cost, found, text, error, actualModel }) {
   entry.classList.remove('running');
+  if (actualModel) {
+    entry.querySelector('.step-model-name').textContent = actualModel;
+  }
 
   const meta = entry.querySelector('.step-meta');
   const parts = [`${elapsed}s`];
@@ -986,7 +974,7 @@ async function runSmartOCR() {
   btnRescan.classList.add('hidden');
   cachedBase64 = null;
 
-  const tiers = pickSmartModels();
+  const tiers = SMART_ROUTE_TIERS;
   let allergenResult = null;
   let totalCost = 0;
   const t0Global = performance.now();
@@ -997,15 +985,15 @@ async function runSmartOCR() {
 
     try {
       statusEl.textContent = `Smart scan: trying ${tier.label} tier (${tier.model})…`;
-      const { text, cost } = await recognizeText(tier.model);
+      const { text, cost, model: actualModel } = await recognizeText(tier.model);
       const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
       if (cost) totalCost += cost;
 
       const found = findAllergens(text);
-      updateStepEntry(entry, { elapsed, cost, found, text });
+      updateStepEntry(entry, { elapsed, cost, found, text, actualModel });
 
       if (found.length > 0) {
-        allergenResult = { found, text, tier: tier.label, model: tier.model };
+        allergenResult = { found, text, tier: tier.label, model: actualModel || tier.model };
         break; // Stop escalating — allergens found
       }
     } catch (err) {
