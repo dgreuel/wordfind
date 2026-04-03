@@ -74,7 +74,8 @@
 
     .camera-wrap.danger {
       border-color: #e74c3c;
-      box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+      border-width: 6px;
+      box-shadow: 0 0 24px rgba(231, 76, 60, 0.5);
     }
 
     video,
@@ -178,7 +179,7 @@
       font-size: 1rem;
     }
 
-    .results .tag {
+    .tag {
       display: inline-block;
       padding: 0.25rem 0.6rem;
       margin: 0.2rem;
@@ -479,14 +480,14 @@
       border-color: #888;
     }
 
-    /* Loading overlay */
+    /* Scan bar overlay */
     .loading-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.45);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      justify-content: stretch;
       z-index: 5;
     }
 
@@ -494,18 +495,28 @@
       display: none;
     }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    .scan-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 40%, #fff 50%, rgba(255, 255, 255, 0.9) 60%, transparent 100%);
+      box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.6);
+      animation: scan-bounce 1.6s ease-in-out infinite;
+      border-radius: 2px;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    @keyframes scan-bounce {
+      0% {
+        top: 8%;
+      }
+
+      50% {
+        top: 88%;
+      }
+
+      100% {
+        top: 8%;
       }
     }
 
@@ -529,7 +540,7 @@
       <video id="video" autoplay playsinline muted></video>
       <canvas id="snapshot"></canvas>
       <div class="loading-overlay hidden" id="loader">
-        <div class="spinner"></div>
+        <div class="scan-bar"></div>
       </div>
     </div>
 
@@ -1007,21 +1018,26 @@
         }
       }
 
-      let cost = null;
-      if (generationId) {
+      let cost = null; // cost fetched separately after stream
+
+      return { text, usage: {}, generationId, cost, model: finalModel };
+    }
+
+    // ── Fetch generation cost in background ──
+    async function fetchCost(generationId, apiKey, onCost) {
+      for (let attempt = 0; attempt < 5; attempt++) {
+        await new Promise(r => setTimeout(r, 3000));
         try {
-          await new Promise(r => setTimeout(r, 1500)); // allow usage to settle
           const genRes = await fetch(`https://openrouter.ai/api/v1/generation?id=${generationId}`, {
             headers: { 'Authorization': `Bearer ${apiKey}` }
           });
           if (genRes.ok) {
             const genData = await genRes.json();
-            cost = genData?.data?.total_cost ?? null;
+            const c = genData?.data?.total_cost ?? null;
+            if (c !== null) { onCost(c); return; }
           }
         } catch (e) { }
       }
-
-      return { text, usage: {}, cost, model: finalModel };
     }
 
     // ── Smart routing models (picked from each tier) ──
@@ -1119,46 +1135,57 @@
       cachedBase64 = null;
 
       const t0 = performance.now();
-      let hasAlerted = false;
 
       try {
-        const { text, cost } = await recognizeText(modelSelect.value, (partialText) => {
+        const { text, generationId, model: finalModel } = await recognizeText(modelSelect.value, (partialText) => {
           ocrTextEl.textContent = partialText;
           ocrTextEl.classList.add('visible');
 
-          if (!hasAlerted) {
-            const found = findAllergens(partialText);
-            if (found.length > 0) {
-              hasAlerted = true;
-              cameraWrap.classList.add('danger');
-              const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
-              statusEl.textContent = `Allergens detected! (${elapsed}s)`;
-              resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
-                found.map(a => `<span class="tag found">${a}</span>`).join('');
-              resultsEl.classList.add('visible');
-            }
+          const found = findAllergens(partialText);
+          if (found.length > 0) {
+            cameraWrap.classList.remove('safe');
+            cameraWrap.classList.add('danger');
+            const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+            statusEl.textContent = `Allergens detected! (${elapsed}s…)`;
+            resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
+              found.map(a => `<span class="tag found">${a}</span>`).join('');
+            resultsEl.classList.add('visible');
           }
         });
 
+        loader.classList.add('hidden');
+        btnScan.disabled = !stream;
+        btnRescan.classList.remove('hidden');
+
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
         const found = findAllergens(text);
-        const costStr = cost !== null && cost !== undefined ? ` · $${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}` : '';
 
         if (found.length > 0) {
           cameraWrap.classList.add('danger');
-          statusEl.textContent = `Allergens detected (${found.length})! (${elapsed}s${costStr})`;
+          statusEl.textContent = `Allergens detected (${found.length})! (${elapsed}s)`;
           resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
             found.map(a => `<span class="tag found">${a}</span>`).join('');
         } else {
           cameraWrap.classList.add('safe');
-          statusEl.textContent = `No allergens detected. (${elapsed}s${costStr})`;
+          statusEl.textContent = `No allergens detected. (${elapsed}s)`;
           resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
         }
         resultsEl.classList.add('visible');
+
+        // Fetch cost in background — update status text when it arrives
+        if (generationId) {
+          const apiKey = apiKeyInput.value.trim();
+          fetchCost(generationId, apiKey, (cost) => {
+            const costStr = ` · $${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}`;
+            const base = found.length > 0
+              ? `Allergens detected (${found.length})! (${elapsed}s${costStr})`
+              : `No allergens detected. (${elapsed}s${costStr})`;
+            statusEl.textContent = base;
+          });
+        }
       } catch (err) {
         const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
         statusEl.textContent = `Error: ${err.message} (${elapsed}s)`;
-      } finally {
         loader.classList.add('hidden');
         btnScan.disabled = !stream;
         btnRescan.classList.remove('hidden');
@@ -1185,56 +1212,65 @@
       for (const tier of tiers) {
         const entry = addStepEntry(tier.model, tier.label);
         const t0 = performance.now();
-        let hasAlerted = false;
-
         try {
           statusEl.textContent = `Smart scan: trying ${tier.label} tier (${tier.model})…`;
-          const { text, cost, model: actualModel } = await recognizeText(tier.model, (partialText) => {
-            if (!hasAlerted) {
-              const partialFound = findAllergens(partialText);
-              if (partialFound.length > 0) {
-                hasAlerted = true;
-                cameraWrap.classList.add('danger');
-                const partialElapsed = ((performance.now() - t0) / 1000).toFixed(1);
-                statusEl.textContent = `Allergens found via stream! (${partialElapsed}s)`;
-              }
+          const { text, generationId, model: actualModel } = await recognizeText(tier.model, (partialText) => {
+            const partialFound = findAllergens(partialText);
+            if (partialFound.length > 0) {
+              cameraWrap.classList.remove('safe');
+              cameraWrap.classList.add('danger');
+              const partialElapsed = ((performance.now() - t0) / 1000).toFixed(1);
+              statusEl.textContent = `Allergens found via stream! (${partialElapsed}s…)`;
+              resultsEl.innerHTML = `<h3>Allergens found:</h3>` +
+                partialFound.map(a => `<span class="tag found">${a}</span>`).join('');
+              resultsEl.classList.add('visible');
             }
           });
           const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
-          if (cost) totalCost += cost;
 
           const found = findAllergens(text);
-          updateStepEntry(entry, { elapsed, cost, found, text, actualModel });
+          updateStepEntry(entry, { elapsed, cost: null, found, text, actualModel });
+
+          // Fetch cost for this step in background — only update the meta span
+          if (generationId) {
+            const apiKey = apiKeyInput.value.trim();
+            fetchCost(generationId, apiKey, (cost) => {
+              totalCost += cost;
+              const meta = entry.querySelector('.step-meta');
+              if (meta) {
+                const costStr = `$${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}`;
+                meta.innerHTML = `<span>${elapsed}s</span><span>${costStr}</span>`;
+              }
+            });
+          }
 
           if (found.length > 0) {
             allergenResult = { found, text, tier: tier.label, model: actualModel || tier.model };
-            break; // Stop escalating — allergens found
+            break;
           }
         } catch (err) {
           const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
           updateStepEntry(entry, { elapsed, cost: null, found: [], text: '', error: err.message });
-          // Continue to next tier on error
         }
       }
-
-      const totalElapsed = ((performance.now() - t0Global) / 1000).toFixed(1);
-      const costStr = totalCost > 0 ? ` · total $${totalCost < 0.001 ? totalCost.toFixed(6) : totalCost.toFixed(4)}` : '';
-
-      if (allergenResult) {
-        cameraWrap.classList.add('danger');
-        statusEl.textContent = `Allergens found by ${allergenResult.tier} tier! (${totalElapsed}s${costStr})`;
-        resultsEl.innerHTML = `<h3>Allergens found (${allergenResult.model}):</h3>` +
-          allergenResult.found.map(a => `<span class="tag found">${a}</span>`).join('');
-      } else {
-        cameraWrap.classList.add('safe');
-        statusEl.textContent = `No allergens detected across all tiers. (${totalElapsed}s${costStr})`;
-        resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found (checked ${tiers.length} models)</span>`;
-      }
-      resultsEl.classList.add('visible');
 
       loader.classList.add('hidden');
       btnScan.disabled = !stream;
       btnRescan.classList.remove('hidden');
+
+      const totalElapsed = ((performance.now() - t0Global) / 1000).toFixed(1);
+
+      if (allergenResult) {
+        cameraWrap.classList.add('danger');
+        statusEl.textContent = `Allergens found by ${allergenResult.tier} tier! (${totalElapsed}s)`;
+        resultsEl.innerHTML = `<h3>Allergens found (${allergenResult.model}):</h3>` +
+          allergenResult.found.map(a => `<span class="tag found">${a}</span>`).join('');
+      } else {
+        cameraWrap.classList.add('safe');
+        statusEl.textContent = `No allergens detected across all tiers. (${totalElapsed}s)`;
+        resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found (checked ${tiers.length} models)</span>`;
+      }
+      resultsEl.classList.add('visible');
     }
 
     async function scanCamera() {
