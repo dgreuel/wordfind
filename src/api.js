@@ -41,6 +41,7 @@ export function groupModelsByPrice(models) {
 }
 
 const SEPARATOR = '---ALLERGENS---';
+const SUMMARY_SEPARATOR = '---SUMMARY---';
 
 function buildPrompt(allergenTerms) {
   const list = allergenTerms.join(', ');
@@ -57,10 +58,12 @@ IMPORTANT context rules:
 - "soy lecithin" should flag soy
 - Consider ingredient aliases (e.g. "casein" = milk protein, "semolina" = wheat)
 
-OUTPUT FORMAT — you MUST use this exact format with the separator:
+OUTPUT FORMAT — you MUST use this exact format with the separators:
 <raw text from the image>
 ${SEPARATOR}
 ["allergen1", "allergen2"]
+${SUMMARY_SEPARATOR}
+<1-2 sentence summary explaining which allergens were found and why, or why none were found. Note any "free from" claims or "may contain" warnings.>
 
 If no allergens are found, output an empty array: []
 The array must only contain allergens from the provided list. Use lowercase.`;
@@ -68,28 +71,38 @@ The array must only contain allergens from the provided list. Use lowercase.`;
 
 export function parseStructuredResponse(fullText) {
   const sepIdx = fullText.indexOf(SEPARATOR);
-  if (sepIdx === -1) return { rawText: fullText, aiAllergens: null };
+  if (sepIdx === -1) return { rawText: fullText, aiAllergens: null, aiSummary: null };
 
   const rawText = fullText.slice(0, sepIdx).trim();
-  const jsonPart = fullText.slice(sepIdx + SEPARATOR.length).trim();
+  let remainder = fullText.slice(sepIdx + SEPARATOR.length).trim();
+
+  // Split off summary if present
+  let aiSummary = null;
+  const sumIdx = remainder.indexOf(SUMMARY_SEPARATOR);
+  if (sumIdx !== -1) {
+    aiSummary = remainder.slice(sumIdx + SUMMARY_SEPARATOR.length).trim();
+    remainder = remainder.slice(0, sumIdx).trim();
+  }
 
   let aiAllergens = null;
   try {
-    aiAllergens = JSON.parse(jsonPart);
+    aiAllergens = JSON.parse(remainder);
     if (!Array.isArray(aiAllergens)) aiAllergens = null;
   } catch (_) {
-    const match = jsonPart.match(/\[.*?\]/s);
+    const match = remainder.match(/\[.*?\]/s);
     if (match) {
       try { aiAllergens = JSON.parse(match[0]); } catch (_2) {}
     }
   }
-  return { rawText, aiAllergens };
+  return { rawText, aiAllergens, aiSummary };
 }
 
 export function stripSeparator(partialText) {
   const sepIdx = partialText.indexOf(SEPARATOR);
   return sepIdx !== -1 ? partialText.slice(0, sepIdx).trim() : partialText;
 }
+
+export { SUMMARY_SEPARATOR };
 
 export async function recognizeText(modelId, apiKey, { onChunk, allergenTerms = [] } = {}) {
   if (!apiKey) throw new Error('No API key. Open "API settings" below and paste your OpenRouter key.');
@@ -164,11 +177,11 @@ export async function recognizeText(modelId, apiKey, { onChunk, allergenTerms = 
       }
     }
 
-    const { rawText, aiAllergens } = allergenTerms.length > 0
+    const { rawText, aiAllergens, aiSummary } = allergenTerms.length > 0
       ? parseStructuredResponse(text)
-      : { rawText: text, aiAllergens: null };
+      : { rawText: text, aiAllergens: null, aiSummary: null };
 
-    return { text: rawText, aiAllergens, generationId, model: finalModel };
+    return { text: rawText, aiAllergens, aiSummary, generationId, model: finalModel };
   }
 
   throw new Error('Max retries exceeded');

@@ -4,7 +4,7 @@ import { preprocessImage, clearCache } from './image.js';
 import { loadSettings, initApiKeyListener, getApiKey } from './state.js';
 import { getAllergens, saveAllergens as saveAllergensUI, initAllergens, addCustomAllergen } from './ui/allergen-ui.js';
 import { findAllergensDetailed } from './allergens.js';
-import { buildHighlightedHTML, buildTagsHTML } from './utils.js';
+import { buildHighlightedHTML, buildTagsHTML, escHtml } from './utils.js';
 import { clearStepLog, addStepEntry, updateStepEntry } from './ui/step-log.js';
 
 // ── DOM elements ──
@@ -119,7 +119,7 @@ async function runOCR() {
   const allergenTerms = getActiveTermList();
 
   try {
-    const { text, aiAllergens, generationId, model: finalModel } = await recognizeText(modelSelect.value, apiKey, {
+    const { text, aiAllergens, aiSummary, generationId, model: finalModel } = await recognizeText(modelSelect.value, apiKey, {
       allergenTerms,
       onChunk: (partialText) => {
         // Strip separator during streaming for clean display
@@ -144,75 +144,73 @@ async function runOCR() {
     btnRescan.classList.remove('hidden');
 
     const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+    let finalGroups;
 
-    // Use AI allergen analysis when available; regex as fallback
-    if (aiAllergens && aiAllergens.length > 0) {
-      // Map AI-detected terms back to group labels for consistent display
-      const aiGroups = [];
+    // AI analysis is authoritative when available (even if empty array)
+    if (Array.isArray(aiAllergens)) {
+      // Map AI-detected terms back to group labels
+      finalGroups = [];
       for (const term of aiAllergens) {
         const lower = term.toLowerCase();
         for (const g of allergens) {
           if (!g.enabled) continue;
           if (g.terms.some(t => t.enabled && t.term === lower)) {
-            if (!aiGroups.some(ag => ag.label === g.label)) {
-              aiGroups.push({ label: g.label, matchedTerms: [] });
+            let existing = finalGroups.find(fg => fg.label === g.label);
+            if (!existing) {
+              existing = { label: g.label, matchedTerms: [] };
+              finalGroups.push(existing);
             }
-            const existing = aiGroups.find(ag => ag.label === g.label);
             if (!existing.matchedTerms.includes(lower)) existing.matchedTerms.push(lower);
             break;
           }
         }
       }
 
-      const { matches } = findAllergensDetailed(text, allergens);
-      ocrTextEl.innerHTML = buildHighlightedHTML(text, matches);
-      ocrTextEl.classList.add('visible');
-
-      if (aiGroups.length > 0) {
-        cameraWrap.classList.add('danger');
-        statusEl.textContent = `Allergens detected (${aiGroups.length})! (${elapsed}s)`;
-        resultsEl.innerHTML = `<h3>Allergens found:</h3>` + buildTagsHTML(aiGroups);
+      // Only highlight terms that the AI confirmed as actual allergens
+      if (finalGroups.length > 0) {
+        const confirmedTerms = finalGroups.flatMap(g => g.matchedTerms);
+        const { matches } = findAllergensDetailed(text, allergens);
+        const filteredMatches = matches.filter(m => confirmedTerms.includes(m.term));
+        ocrTextEl.innerHTML = buildHighlightedHTML(text, filteredMatches);
       } else {
-        cameraWrap.classList.add('safe');
-        statusEl.textContent = `No allergens detected. (${elapsed}s)`;
-        resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
+        // AI says no allergens — show plain text, no highlights
+        ocrTextEl.innerHTML = buildHighlightedHTML(text, []);
       }
-      resultsEl.classList.add('visible');
-
-      // Fetch cost
-      if (generationId && !isFreeModel(finalModel)) {
-        fetchCost(generationId, apiKey, (cost) => {
-          const costStr = ` · $${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}`;
-          const base = aiGroups.length > 0
-            ? `Allergens detected (${aiGroups.length})! (${elapsed}s${costStr})`
-            : `No allergens detected. (${elapsed}s${costStr})`;
-          statusEl.textContent = base;
-        });
-      }
-      return;
+    } else {
+      // Fallback: regex-based detection
+      const { groups, matches } = findAllergensDetailed(text, allergens);
+      finalGroups = groups;
+      ocrTextEl.innerHTML = buildHighlightedHTML(text, matches);
     }
 
-    // Fallback: regex-based detection
-    const { groups, matches } = findAllergensDetailed(text, allergens);
-    ocrTextEl.innerHTML = buildHighlightedHTML(text, matches);
     ocrTextEl.classList.add('visible');
 
-    if (groups.length > 0) {
+    // Clear any streaming early-detection that AI overrode
+    cameraWrap.classList.remove('safe', 'danger');
+    resultsEl.classList.remove('visible');
+
+    if (finalGroups.length > 0) {
       cameraWrap.classList.add('danger');
-      statusEl.textContent = `Allergens detected (${groups.length})! (${elapsed}s)`;
-      resultsEl.innerHTML = `<h3>Allergens found:</h3>` + buildTagsHTML(groups);
+      statusEl.textContent = `Allergens detected (${finalGroups.length})! (${elapsed}s)`;
+      resultsEl.innerHTML = `<h3>Allergens found:</h3>` + buildTagsHTML(finalGroups);
     } else {
       cameraWrap.classList.add('safe');
       statusEl.textContent = `No allergens detected. (${elapsed}s)`;
       resultsEl.innerHTML = `<h3>Result:</h3><span class="tag clear">No allergens found</span>`;
     }
+
+    // Show AI summary if available
+    if (aiSummary) {
+      resultsEl.innerHTML += `<p class="ai-summary">${escHtml(aiSummary)}</p>`;
+    }
+
     resultsEl.classList.add('visible');
 
     if (generationId && !isFreeModel(finalModel)) {
       fetchCost(generationId, apiKey, (cost) => {
         const costStr = ` · $${cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)}`;
-        const base = groups.length > 0
-          ? `Allergens detected (${groups.length})! (${elapsed}s${costStr})`
+        const base = finalGroups.length > 0
+          ? `Allergens detected (${finalGroups.length})! (${elapsed}s${costStr})`
           : `No allergens detected. (${elapsed}s${costStr})`;
         statusEl.textContent = base;
       });
@@ -250,7 +248,7 @@ async function runSmartOCR() {
     const t0 = performance.now();
     try {
       statusEl.textContent = `Smart scan: trying ${tier.label} tier (${tier.model})…`;
-      const { text, aiAllergens, generationId, model: actualModel } = await recognizeText(tier.model, apiKey, {
+      const { text, aiAllergens, aiSummary, generationId, model: actualModel } = await recognizeText(tier.model, apiKey, {
         allergenTerms,
         onChunk: (partialText) => {
           const displayText = stripSeparator(partialText);
@@ -267,9 +265,9 @@ async function runSmartOCR() {
       });
       const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
 
-      // Use AI allergens if available, otherwise regex fallback
+      // AI analysis is authoritative when available (even if empty array)
       let foundGroups, foundLabels, foundMatches;
-      if (aiAllergens) {
+      if (Array.isArray(aiAllergens)) {
         foundGroups = [];
         for (const term of aiAllergens) {
           const lower = term.toLowerCase();
@@ -287,7 +285,12 @@ async function runSmartOCR() {
           }
         }
         foundLabels = foundGroups.map(g => g.label);
-        foundMatches = findAllergensDetailed(text, allergens).matches;
+        // Only highlight AI-confirmed terms
+        const confirmedTerms = foundGroups.flatMap(g => g.matchedTerms);
+        const allMatches = findAllergensDetailed(text, allergens).matches;
+        foundMatches = confirmedTerms.length > 0
+          ? allMatches.filter(m => confirmedTerms.includes(m.term))
+          : [];
       } else {
         const detailed = findAllergensDetailed(text, allergens);
         foundGroups = detailed.groups;
@@ -308,7 +311,7 @@ async function runSmartOCR() {
       }
 
       if (foundGroups.length > 0) {
-        allergenResult = { found: foundLabels, groups: foundGroups, text, tier: tier.label, model: actualModel || tier.model };
+        allergenResult = { found: foundLabels, groups: foundGroups, text, tier: tier.label, model: actualModel || tier.model, aiSummary };
         break;
       }
     } catch (err) {
@@ -323,10 +326,16 @@ async function runSmartOCR() {
 
   const totalElapsed = ((performance.now() - t0Global) / 1000).toFixed(1);
 
+  // Clear streaming early-detection
+  cameraWrap.classList.remove('safe', 'danger');
+
   if (allergenResult) {
     cameraWrap.classList.add('danger');
     statusEl.textContent = `Allergens found by ${allergenResult.tier} tier! (${totalElapsed}s)`;
     resultsEl.innerHTML = `<h3>Allergens found (${allergenResult.model}):</h3>` + buildTagsHTML(allergenResult.groups);
+    if (allergenResult.aiSummary) {
+      resultsEl.innerHTML += `<p class="ai-summary">${escHtml(allergenResult.aiSummary)}</p>`;
+    }
   } else {
     cameraWrap.classList.add('safe');
     statusEl.textContent = `No allergens detected across all tiers. (${totalElapsed}s)`;
