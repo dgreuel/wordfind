@@ -187,6 +187,51 @@ export async function recognizeText(modelId, apiKey, { onChunk, allergenTerms = 
   throw new Error('Max retries exceeded');
 }
 
+/**
+ * Text-only confirmation call: given terms regex found that AI didn't list,
+ * ask a free model to confirm which are actual allergens vs "free from" mentions.
+ * No image needed — this is fast and cheap.
+ */
+export async function confirmAllergens(text, candidateTerms, apiKey) {
+  if (!apiKey || !candidateTerms.length) return [];
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'openrouter/free',
+      messages: [{
+        role: 'user',
+        content: `Food ingredient label text:
+---
+${text}
+---
+Text matching found these allergen terms: ${candidateTerms.join(', ')}
+
+For each term, is it an ACTUAL allergen present in this product?
+Rules:
+- "X free", "free from X", "no X", "X-free" → NOT present (exclude)
+- "may contain X", "traces of X", listed in ingredients → present (include)
+
+Reply ONLY with a JSON array of confirmed allergen terms, lowercase.
+Example: ["egg", "milk"] — or [] if none confirmed.`,
+      }],
+      max_tokens: 150,
+      temperature: 0,
+    }),
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  const content = data.choices?.[0]?.message?.content?.trim() || '';
+  try {
+    const match = content.match(/\[[\s\S]*?\]/);
+    if (match) {
+      const arr = JSON.parse(match[0]);
+      return Array.isArray(arr) ? arr.map(t => String(t).toLowerCase()) : [];
+    }
+  } catch {}
+  return [];
+}
+
 export async function fetchCost(generationId, apiKey, onCost) {
   const delays = [2000, 4000, 6000, 8000, 10000, 15000, 20000, 30000];
   for (let i = 0; i < delays.length; i++) {
