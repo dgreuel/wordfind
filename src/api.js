@@ -40,11 +40,66 @@ export function groupModelsByPrice(models) {
   return groups;
 }
 
-export async function recognizeText(modelId, apiKey, { onChunk } = {}) {
+const SEPARATOR = '---ALLERGENS---';
+
+function buildPrompt(allergenTerms) {
+  const list = allergenTerms.join(', ');
+  return `You are an allergen detection assistant analyzing a food ingredient label image.
+
+STEP 1: Extract ALL text from the image exactly as written. Preserve line breaks.
+
+STEP 2: Analyze the extracted text for these allergens: ${list}
+
+IMPORTANT context rules:
+- "gluten free", "nut free", "dairy free", etc. mean the allergen is ABSENT — do NOT flag it
+- "may contain traces of X" SHOULD be flagged — it indicates possible presence
+- "almond milk" or "coconut milk" should flag the plant (almond/coconut) but NOT dairy milk
+- "soy lecithin" should flag soy
+- Consider ingredient aliases (e.g. "casein" = milk protein, "semolina" = wheat)
+
+OUTPUT FORMAT — you MUST use this exact format with the separator:
+<raw text from the image>
+${SEPARATOR}
+["allergen1", "allergen2"]
+
+If no allergens are found, output an empty array: []
+The array must only contain allergens from the provided list. Use lowercase.`;
+}
+
+export function parseStructuredResponse(fullText) {
+  const sepIdx = fullText.indexOf(SEPARATOR);
+  if (sepIdx === -1) return { rawText: fullText, aiAllergens: null };
+
+  const rawText = fullText.slice(0, sepIdx).trim();
+  const jsonPart = fullText.slice(sepIdx + SEPARATOR.length).trim();
+
+  let aiAllergens = null;
+  try {
+    aiAllergens = JSON.parse(jsonPart);
+    if (!Array.isArray(aiAllergens)) aiAllergens = null;
+  } catch (_) {
+    const match = jsonPart.match(/\[.*?\]/s);
+    if (match) {
+      try { aiAllergens = JSON.parse(match[0]); } catch (_2) {}
+    }
+  }
+  return { rawText, aiAllergens };
+}
+
+export function stripSeparator(partialText) {
+  const sepIdx = partialText.indexOf(SEPARATOR);
+  return sepIdx !== -1 ? partialText.slice(0, sepIdx).trim() : partialText;
+}
+
+export async function recognizeText(modelId, apiKey, { onChunk, allergenTerms = [] } = {}) {
   if (!apiKey) throw new Error('No API key. Open "API settings" below and paste your OpenRouter key.');
 
   const base64 = _getImageBase64 ? _getImageBase64() : null;
   if (!base64) throw new Error('Image not ready.');
+
+  const prompt = allergenTerms.length > 0
+    ? buildPrompt(allergenTerms)
+    : 'Extract ALL text from this image exactly as written. This is a food ingredient label. Output ONLY the raw text, nothing else — no commentary, no formatting, no markdown. Preserve line breaks where they appear.';
 
   const maxAttempts = isFreeModel(modelId) ? 2 : 1;
 
@@ -62,14 +117,11 @@ export async function recognizeText(modelId, apiKey, { onChunk } = {}) {
         messages: [{
           role: 'user',
           content: [
-            {
-              type: 'text',
-              text: 'Extract ALL text from this image exactly as written. This is a food ingredient label. Output ONLY the raw text, nothing else — no commentary, no formatting, no markdown. Preserve line breaks where they appear.',
-            },
+            { type: 'text', text: prompt },
             { type: 'image_url', image_url: { url: base64 } },
           ],
         }],
-        max_tokens: 1024,
+        max_tokens: 1500,
         temperature: 0,
         stream: true,
       }),
@@ -112,7 +164,11 @@ export async function recognizeText(modelId, apiKey, { onChunk } = {}) {
       }
     }
 
-    return { text, generationId, model: finalModel };
+    const { rawText, aiAllergens } = allergenTerms.length > 0
+      ? parseStructuredResponse(text)
+      : { rawText: text, aiAllergens: null };
+
+    return { text: rawText, aiAllergens, generationId, model: finalModel };
   }
 
   throw new Error('Max retries exceeded');
