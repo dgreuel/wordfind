@@ -4,15 +4,18 @@ const MODELS_CACHE_KEY = 'openrouter_models_cache';
 
 export const STORAGE_KEYS = { STORAGE_KEY, MODEL_STORAGE_KEY, MODELS_CACHE_KEY };
 
+export function initModelSelectListener(modelSelect) {
+  modelSelect.addEventListener('change', () => {
+    localStorage.setItem(MODEL_STORAGE_KEY, modelSelect.value);
+  });
+}
+
 export function loadSettings({ apiKeyInput, modelSelect, keyStatus }) {
   apiKeyInput.value = localStorage.getItem(STORAGE_KEY) || '';
   updateKeyStatus(keyStatus, apiKeyInput.value.trim());
+  initModelSelectListener(modelSelect);
   fetchModels(apiKeyInput, modelSelect);
 }
-
-modelSelect?.addEventListener('change', () => {
-  localStorage.setItem(MODEL_STORAGE_KEY, modelSelect.value);
-});
 
 export function renderModelSelect(modelSelect, groups) {
   const saved = localStorage.getItem(MODEL_STORAGE_KEY);
