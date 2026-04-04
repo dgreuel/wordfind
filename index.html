@@ -1025,8 +1025,9 @@
 
     // ── Fetch generation cost in background ──
     async function fetchCost(generationId, apiKey, onCost) {
-      for (let attempt = 0; attempt < 5; attempt++) {
-        await new Promise(r => setTimeout(r, 3000));
+      const delays = [2000, 4000, 6000, 8000, 10000, 15000, 20000, 30000];
+      for (let attempt = 0; attempt < delays.length; attempt++) {
+        await new Promise(r => setTimeout(r, delays[attempt]));
         try {
           const genRes = await fetch(`https://openrouter.ai/api/v1/generation?id=${generationId}`, {
             headers: { 'Authorization': `Bearer ${apiKey}` }
@@ -1034,7 +1035,7 @@
           if (genRes.ok) {
             const genData = await genRes.json();
             const c = genData?.data?.total_cost ?? null;
-            if (c !== null) { onCost(c); return; }
+            if (c !== null && c > 0) { onCost(c); return; }
           }
         } catch (e) { }
       }
