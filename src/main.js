@@ -268,22 +268,30 @@ async function runSmartOCR() {
       const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
 
       // Use AI allergens if available, otherwise regex fallback
-      let foundLabels, foundMatches;
+      let foundGroups, foundLabels, foundMatches;
       if (aiAllergens) {
-        foundLabels = [];
+        foundGroups = [];
         for (const term of aiAllergens) {
+          const lower = term.toLowerCase();
           for (const g of allergens) {
             if (!g.enabled) continue;
-            if (g.terms.some(t => t.enabled && t.term === term.toLowerCase())) {
-              if (!foundLabels.includes(g.label)) foundLabels.push(g.label);
+            if (g.terms.some(t => t.enabled && t.term === lower)) {
+              let existing = foundGroups.find(fg => fg.label === g.label);
+              if (!existing) {
+                existing = { label: g.label, matchedTerms: [] };
+                foundGroups.push(existing);
+              }
+              if (!existing.matchedTerms.includes(lower)) existing.matchedTerms.push(lower);
               break;
             }
           }
         }
+        foundLabels = foundGroups.map(g => g.label);
         foundMatches = findAllergensDetailed(text, allergens).matches;
       } else {
         const detailed = findAllergensDetailed(text, allergens);
-        foundLabels = detailed.groups.map(g => g.label);
+        foundGroups = detailed.groups;
+        foundLabels = foundGroups.map(g => g.label);
         foundMatches = detailed.matches;
       }
 
@@ -299,8 +307,7 @@ async function runSmartOCR() {
         });
       }
 
-      if (foundLabels.length > 0) {
-        const foundGroups = foundLabels.map(l => ({ label: l }));
+      if (foundGroups.length > 0) {
         allergenResult = { found: foundLabels, groups: foundGroups, text, tier: tier.label, model: actualModel || tier.model };
         break;
       }
