@@ -63,7 +63,6 @@ export function renderModelSelect(modelSelect, groups) {
   addGroup('Free', groups.free);
   addGroup('Low cost (<$1/M input)', groups.low);
   addGroup('Mid range ($1–5/M input)', groups.mid);
-  addGroup('Premium (>$5/M input)', groups.high);
 
   if (saved && [...modelSelect.options].some(o => o.value === saved)) {
     modelSelect.value = saved;
