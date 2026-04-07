@@ -178,6 +178,7 @@ async function runOCR() {
         const { groups, matches } = findAllergensDetailed(displayText, allergens);
         ocrTextEl.innerHTML = buildHighlightedHTML(displayText, matches);
         ocrTextEl.classList.add('visible');
+        ocrTextEl.scrollTop = ocrTextEl.scrollHeight;
         if (groups.length > 0) {
           cameraWrap.classList.remove('safe');
           cameraWrap.classList.add('danger');
