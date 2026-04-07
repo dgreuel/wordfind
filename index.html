@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Allergen Detector</title>
   <link rel="stylesheet" href="styles.css">
+  <script type="importmap">{"imports":{"marked":"https://esm.sh/marked"}}</script>
 </head>
 
 <body>
@@ -30,6 +31,7 @@
       </div>
     </div>
 
+    <div class="right-panel">
     <div class="controls">
       <button id="btnScan" disabled>Scan Camera</button>
       <button id="btnUpload">Upload Image</button>
@@ -69,6 +71,7 @@
       <input type="password" id="apiKeyInput" placeholder="OpenRouter API key (sk-or-v1-…)">
       <div class="key-status" id="keyStatus">No API key saved.</div>
     </details>
+    </div><!-- /.right-panel -->
   </main>
 
   <footer>Uses AI vision via OpenRouter for OCR. Image is sent to the API for processing.</footer>
