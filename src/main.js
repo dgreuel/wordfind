@@ -5,6 +5,7 @@ import { loadSettings, initApiKeyListener, getApiKey } from './state.js';
 import { getAllergens, saveAllergens as saveAllergensUI, initAllergens, addCustomAllergen } from './ui/allergen-ui.js';
 import { findAllergensDetailed } from './allergens.js';
 import { buildHighlightedHTML, buildTagsHTML, escHtml } from './utils.js';
+import { marked } from 'marked';
 import { clearStepLog, addStepEntry, updateStepEntry } from './ui/step-log.js';
 import { saveSession, loadSession, clearSession } from './session.js';
 
@@ -219,7 +220,7 @@ async function runOCR() {
     }
 
     if (aiSummary) {
-      resultsEl.innerHTML += `<p class="ai-summary">${escHtml(aiSummary)}</p>`;
+      resultsEl.innerHTML += `<div class="ai-summary">${marked.parse(aiSummary)}</div>`;
     }
 
     resultsEl.classList.add('visible');
