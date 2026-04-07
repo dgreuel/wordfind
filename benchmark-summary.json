@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-04-05T08:13:38.554Z",
+  "totalModels": 68,
+  "totalResults": 204,
+  "tiers": {
+    "low": {
+      "totalModels": 68,
+      "qualifiedModels": 21,
+      "top3": [
+        {
+          "model": "mistralai/mistral-small-3.1-24b-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000008,
+          "avgSpeed": 2332,
+          "errors": 0
+        },
+        {
+          "model": "google/gemma-3-12b-it",
+          "accuracy": 100,
+          "avgCost": 0.000025,
+          "avgSpeed": 145,
+          "errors": 0
+        },
+        {
+          "model": "google/gemini-2.5-flash-lite",
+          "accuracy": 100,
+          "avgCost": 0.000029,
+          "avgSpeed": 1134,
+          "errors": 0
+        }
+      ],
+      "allRanked": [
+        {
+          "model": "mistralai/mistral-small-3.1-24b-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000008,
+          "avgSpeed": 2332
+        },
+        {
+          "model": "google/gemma-3-12b-it",
+          "accuracy": 100,
+          "avgCost": 0.000025,
+          "avgSpeed": 145
+        },
+        {
+          "model": "google/gemini-2.5-flash-lite",
+          "accuracy": 100,
+          "avgCost": 0.000029,
+          "avgSpeed": 1134
+        },
+        {
+          "model": "google/gemma-3-27b-it",
+          "accuracy": 100,
+          "avgCost": 0.000049,
+          "avgSpeed": 287
+        },
+        {
+          "model": "mistralai/ministral-3b-2512",
+          "accuracy": 100,
+          "avgCost": 0.00006,
+          "avgSpeed": 474
+        },
+        {
+          "model": "bytedance/ui-tars-1.5-7b",
+          "accuracy": 100,
+          "avgCost": 0.000069,
+          "avgSpeed": 499
+        },
+        {
+          "model": "mistralai/mistral-small-3.2-24b-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000081,
+          "avgSpeed": 474
+        },
+        {
+          "model": "amazon/nova-lite-v1",
+          "accuracy": 100,
+          "avgCost": 0.000094,
+          "avgSpeed": 1159
+        },
+        {
+          "model": "meta-llama/llama-3.2-11b-vision-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000116,
+          "avgSpeed": 146
+        },
+        {
+          "model": "qwen/qwen3-vl-32b-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000133,
+          "avgSpeed": 795
+        },
+        {
+          "model": "meta-llama/llama-4-scout",
+          "accuracy": 100,
+          "avgCost": 0.000143,
+          "avgSpeed": 258
+        },
+        {
+          "model": "openai/gpt-4.1-nano",
+          "accuracy": 100,
+          "avgCost": 0.000148,
+          "avgSpeed": 546
+        },
+        {
+          "model": "google/gemini-2.0-flash-lite-001",
+          "accuracy": 100,
+          "avgCost": 0.000174,
+          "avgSpeed": 1196
+        },
+        {
+          "model": "qwen/qwen3-vl-8b-instruct",
+          "accuracy": 100,
+          "avgCost": 0.000177,
+          "avgSpeed": 648
+        },
+        {
+          "model": "google/gemini-2.0-flash-001",
+          "accuracy": 100,
+          "avgCost": 0.000231,
+          "avgSpeed": 1054
+        },
+        {
+          "model": "google/gemini-2.5-flash-lite-preview-09-2025",
+          "accuracy": 100,
+          "avgCost": 0.000231,
+          "avgSpeed": 1377
+        },
+        {
+          "model": "qwen/qwen3.5-flash-02-23",
+          "accuracy": 100,
+          "avgCost": 0.000266,
+          "avgSpeed": 715
+        },
+        {
+          "model": "bytedance-seed/seed-2.0-mini",
+          "accuracy": 100,
+          "avgCost": 0.000381,
+          "avgSpeed": 1243
+        },
+        {
+          "model": "qwen/qwen3-vl-8b-thinking",
+          "accuracy": 100,
+          "avgCost": 0.004891,
+          "avgSpeed": 641
+        },
+        {
+          "model": "openrouter/auto",
+          "accuracy": 100,
+          "avgCost": 0.008335,
+          "avgSpeed": 3173
+        },
+        {
+          "model": "google/gemma-3-4b-it",
+          "accuracy": 96.3,
+          "avgCost": 0.000018,
+          "avgSpeed": 257
+        }
+      ]
+    }
+  }
+}
