@@ -1,7 +1,7 @@
 export const SMART_ROUTE_TIERS = [
-  { label: 'Free',      model: 'openrouter/free' },
-  { label: 'Low cost',  model: 'qwen/qwen3-vl-8b-instruct' },
-  { label: 'Mid range', model: 'qwen/qwen2.5-vl-72b-instruct' },
+  { label: 'Free',      model: 'google/gemma-3-4b-it:free' },
+  { label: 'Low cost',  model: 'google/gemma-3-12b-it' },
+  { label: 'Mid range', model: 'qwen/qwen-vl-max' },
 ];
 
 export function isFreeModel(modelId) {

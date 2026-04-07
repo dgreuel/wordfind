@@ -1,0 +1,3142 @@
+{
+  "timestamp": "2026-04-05T08:01:19.375Z",
+  "tierFilter": "low",
+  "testCases": [
+    {
+      "name": "No allergens — chicken salad",
+      "expectedAllergens": []
+    },
+    {
+      "name": "Several allergens — sweet cookie",
+      "expectedAllergens": [
+        "Wheat & Gluten",
+        "Milk & Dairy",
+        "Egg",
+        "Soy",
+        "Peanut"
+      ]
+    },
+    {
+      "name": "Tricky reasoning — \"Gluten Free\" flour blend",
+      "expectedAllergens": [
+        "Wheat & Gluten"
+      ]
+    }
+  ],
+  "models": {
+    "openrouter/auto": {
+      "id": "openrouter/auto",
+      "name": "Auto Router",
+      "tier": "low",
+      "pricePerMInput": -1000000,
+      "pricePerMOutput": -1000000,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\ntal Carbohydrates 10g\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g 0%\nProtein 20g\nVitamin D 0ug 0%\nCalcium 40mg 3%\nIron 1.7mg 9%\nPotassium 680mg 14%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a\nday is used for general nutrition advice.\n\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "anthropic/claude-4.6-opus-20260205",
+          "generationId": "gen-1775376079-dr0OmIarGfhV46mem56S",
+          "elapsed": 3121,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.004925
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE,\nMONONITRATE (VITAMIN B1), RIBOFLAVIN,\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN. VANILLIN.\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK,\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS. MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED $/lb WEIGHT(lb)\nJAN.05.12 JAN.05.12 4.99 0.50\nTOTAL PRICE\n$2.50\n0 200007 702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "anthropic/claude-4.6-opus-20260205",
+          "generationId": "gen-1775376086-QXkGrSBVXSmeSmBMR7iM",
+          "elapsed": 2530,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.01039
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size\n1 oz (28g)\n\nAmount Per Serving\nCalories\n90\n\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat 0g\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes 0g Added Sugars\n0%\nProtein 2g\n\nVitamin D 0mcg\n0%\nCalcium 10mg\n0%\nIron 0.5mg\n2%\nPotassium 10mg\n0%\n\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "anthropic/claude-4.6-opus-20260205",
+          "generationId": "gen-1775376099-PNIEtxFWvxKBGO6808ns",
+          "elapsed": 3868,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00969
+        }
+      ]
+    },
+    "mistralai/mistral-small-3.1-24b-instruct": {
+      "id": "mistralai/mistral-small-3.1-24b-instruct",
+      "name": "Mistral: Mistral Small 3.1 24B",
+      "tier": "low",
+      "pricePerMInput": 0.03,
+      "pricePerMOutput": 0.11,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrates 10g 4%\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g\n\nProtein 22g\n\nVitamin D 0mcg 0%\nCalcium 40mg 4%\nIron 1.7mg 10%\nPotassium 610mg 14%\n\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nIngredients: Cherry, Lettuce, Chicken, Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "mistralai/mistral-small-3.1-24b-instruct-2503",
+          "generationId": "gen-1775376108-yUtodFuRMIuhnv41hluP",
+          "elapsed": 3120,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000023065
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\n\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, VITAMIN 21, FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, UHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING COLORISTINUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #17, BLUE #37)\n\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\n\nSELL BY PACKED WEIGHT(16) JAN.05.12 JAN.05.12 4.99 0.50\n\n0 200007 702505\n\nTOTAL PRICE $2.50\n\nGlobe Food Equipment Company 2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "mistralai/mistral-small-3.1-24b-instruct-2503",
+          "generationId": "gen-1775376165-wS6XUiQ6p0lSIozlk2vo",
+          "elapsed": 1952,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving\nCalories 90\n\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n\n*The % Daily Value (DV) tells you how much of a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "mistralai/mistral-small-3.1-24b-instruct-2503",
+          "generationId": "gen-1775376189-DfZLkMnmgsxa8rQzQyjR",
+          "elapsed": 1923,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        }
+      ]
+    },
+    "google/gemma-3-4b-it": {
+      "id": "google/gemma-3-4b-it",
+      "name": "Google: Gemma 3 4B",
+      "tier": "low",
+      "pricePerMInput": 0.04,
+      "pricePerMOutput": 0.08,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "otal Carbohydrates 10g\nDietary Fiber 3g\nAdded Sugars 0g\nProtein 22g\nVitamin D 0ug\nIron 1.1mg\nCalcium 40mg\nPotassium 680mg\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "google/gemma-3-4b-it",
+          "generationId": "gen-1775376195-CcGYKAC89lcaZ6S4SKTw",
+          "elapsed": 98,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000218
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\n\nINGREDIENTS: SUGAR. ENRICHED FLOUR, WHEAT\nFLOUR, REDUCED IRON, THIAMINE\nMONONITRATE (VITAMIN B1), RIBOFLAVIN\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SUGAR, WHEY, NONFAT MILK,\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED 5/16 WEIGHT(16)\nJAN.05.12 JAN.05.12 4.99 0.50\n2153 Dryden Rd. Dayton, Oh 937-299-5493\n7\nTOTAL PRICE\n$2.50",
+          "resolvedModel": "google/gemma-3-4b-it",
+          "generationId": "gen-1775376199-BlScU074lT1K7ieXQUnS",
+          "elapsed": 534,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 4,
+            "totalExpected": 5,
+            "missedAllergens": [
+              "Soy"
+            ],
+            "falsePositives": [],
+            "recall": 0.8,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving\nCalories\n90\n\nTotal Fat 1g\n% Daily Value 1%\nTrans Fat 0g\n5%\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nIncludes 0g Added Sugars\n0%\n\nProtein 2g\nVitamin D 0mcg\n0%\nCalcium 10mg\n0%\nIron 0.5mg\n2%\nPotassium 10mg\n0%\n\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH, DIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "google/gemma-3-4b-it",
+          "generationId": "gen-1775376206-vuJIwNuBkYrnrIdLYTR6",
+          "elapsed": 139,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000314
+        }
+      ]
+    },
+    "google/gemma-3-12b-it": {
+      "id": "google/gemma-3-12b-it",
+      "name": "Google: Gemma 3 12B",
+      "tier": "low",
+      "pricePerMInput": 0.04,
+      "pricePerMOutput": 0.13,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "otal Carbohydrates 10g\nDietary Fiber 3g 10%\nAdded Sugars 0g 0%\nProtein 22g\nVitamin D 0µg\nIron 1.1mg 6%\nCalcium 40mg 3%\nPotassium 680mg 14%\n* The % Daily Value (DV) tells you how much a nutrient in\na serving of food contributes to a daily diet. 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "google/gemma-3-12b-it",
+          "generationId": "gen-1775376211-KVBo3Y4i0r5JqJJC8UIh",
+          "elapsed": 158,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00003038
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\n\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, REDUCED IRON, THIAMINE\n(VITAMIN B1), RIBOFLAVIN.\n(VITAMIN B2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SOY LECITHIN, VANILLIN,\nCHOCOLATE, WHEY, NONFAT MILK,\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITHIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, BLUE #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\n\nSELL BY PACKED\nJAN.05.12 JAN.05.12 4.99 0.50\n7\nTOTAL PRICE\n$2.50\n\n0 20000 7 702505\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "google/gemma-3-12b-it",
+          "generationId": "gen-1775376219-bdwaeajSR9d52f3sfCx2",
+          "elapsed": 136,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving\n\nTotal Fiber 4g 14%\nTotal Carbohydrate 22g 8%\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\n\nIncludes 0g Added Sugars 0%\n\nProtein 2g\n\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, DIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "google/gemma-3-12b-it",
+          "generationId": "gen-1775376227-JNbRhRvThyiqZsonfGbR",
+          "elapsed": 140,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00004403
+        }
+      ]
+    },
+    "meta-llama/llama-3.2-11b-vision-instruct": {
+      "id": "meta-llama/llama-3.2-11b-vision-instruct",
+      "name": "Meta: Llama 3.2 11B Vision Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.049,
+      "pricePerMOutput": 0.049,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Ingredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "meta-llama/llama-3.2-11b-vision-instruct",
+          "generationId": "gen-1775376235-LF534ncWvps9RphOLfqv",
+          "elapsed": 100,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000082124
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, (VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT, SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, WHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING COLORSTITHANIUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #417, BLUE #37) DURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK. EGGS WHEAT FLOUR & YELLOW #5\nSELL BY JAN.05.12\nPACKED 5/1b\nWEIGHT(1lb) 0.50\nTOTAL PRICE $2.50\nGlobe Food Equipment Company\n2153 Dryden Rd.\nDayton, Oh 937-299-5493",
+          "resolvedModel": "meta-llama/llama-3.2-11b-vision-instruct",
+          "generationId": "gen-1775376237-3I0OMOp3mUBF68nnFuPi",
+          "elapsed": 134,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000095697
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n\n16 servings per container\n\nServing size 1 oz (28g)\n\nAmount Per Serving\n\nCalories 90\n\n% Daily Value*\n\nTotal Fat 1g\nSaturated Fat 1g\nTrans Fat 0g\n\nCholesterol 0mg\nSodium 15mg\n\nTotal Carbohydrate 22g\nDietary Fiber 4g\nTotal Sugars 1g\nIncludes 0g Added Sugars\n\nProtein 2g\n\nVitamin D 0mcg\nCalcium 10mg\nIron 0.5mg\nPotassium 10mg\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "meta-llama/llama-3.2-11b-vision-instruct",
+          "generationId": "gen-1775376244-ZKItmpPvvTS0Ty6Er0xB",
+          "elapsed": 204,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000168952
+        }
+      ]
+    },
+    "qwen/qwen3.5-9b": {
+      "id": "qwen/qwen3.5-9b",
+      "name": "Qwen: Qwen3.5-9B",
+      "tier": "low",
+      "pricePerMInput": 0.049999999999999996,
+      "pricePerMOutput": 0.15,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "",
+          "resolvedModel": "qwen/qwen3.5-9b-20260310",
+          "generationId": "gen-1775376248-gsEj1x2gJYR9jmelYp8d",
+          "elapsed": 560,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00015955
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "",
+          "resolvedModel": "qwen/qwen3.5-9b-20260310",
+          "generationId": "gen-1775376257-OvwPDqRhfQdmPoNtyKu8",
+          "elapsed": 770,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 5,
+            "missedAllergens": [
+              "Wheat & Gluten",
+              "Milk & Dairy",
+              "Egg",
+              "Soy",
+              "Peanut"
+            ],
+            "falsePositives": [],
+            "recall": 0,
+            "precision": 0
+          },
+          "cost": 0.00016915
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203\n",
+          "resolvedModel": "qwen/qwen3.5-9b-20260310",
+          "generationId": "gen-1775376266-AgXbGHXnWAXKxkfgkjQ1",
+          "elapsed": 1008,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        }
+      ]
+    },
+    "openai/gpt-5-nano": {
+      "id": "openai/gpt-5-nano",
+      "name": "OpenAI: GPT-5 Nano",
+      "tier": "low",
+      "pricePerMInput": 0.049999999999999996,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "",
+          "resolvedModel": "openai/gpt-5-nano-2025-08-07",
+          "generationId": "gen-1775376274-2xfqTHsdmeZTUG1bEUKO",
+          "elapsed": 221,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0004168
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "",
+          "resolvedModel": "openai/gpt-5-nano-2025-08-07",
+          "generationId": "gen-1775376286-UcBxCsv1fxTHsSAgNdeP",
+          "elapsed": 276,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 5,
+            "missedAllergens": [
+              "Wheat & Gluten",
+              "Milk & Dairy",
+              "Egg",
+              "Soy",
+              "Peanut"
+            ],
+            "falsePositives": [],
+            "recall": 0,
+            "precision": 0
+          },
+          "cost": 0.0004312
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "",
+          "resolvedModel": "openai/gpt-5-nano-2025-08-07",
+          "generationId": "gen-1775376311-mqHB499AySEfJBnkEh7D",
+          "elapsed": 2552,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 1,
+            "missedAllergens": [
+              "Wheat & Gluten"
+            ],
+            "falsePositives": [],
+            "recall": 0,
+            "precision": 0
+          },
+          "cost": null
+        }
+      ]
+    },
+    "amazon/nova-lite-v1": {
+      "id": "amazon/nova-lite-v1",
+      "name": "Amazon: Nova Lite 1.0",
+      "tier": "low",
+      "pricePerMInput": 0.06,
+      "pricePerMOutput": 0.24,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "tal Carbohydrates 10g 4. Dietary Fiber 3g 10% Total Sugars 0g 0% Added Sugars 0g Protein 22g Vitamin D 0ug 0% Calcium 40mg 3% Iron 1.1mg 6% Potassium 580mg 14% * The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice. Ingredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "amazon/nova-lite-v1",
+          "generationId": "gen-1775376324-ccFaLE1Q0ngtJVQ2BPSZ",
+          "elapsed": 1426,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE INGREDIENTS: SUGAR. ENRICHED FLOUR. WHEAT FLOUR. NIACIN. REDUCED IRON. THIAMINE. MONONI TRATE (VITAMIN B1). RIBOFLAVIN. (VITAMIN 2). FOLIC ACID. CANOLA OIL &/OR PALM OIL. HIGH FRUCTOSE CORN SYRUP. BAKING SODA. CORNSTARCH. SALT SOY LECITHIN. VANILLIN. CHOCOLATE. SUGAR. WHEY. NONFAT MILK. ARTIFICIAL FLAVOR. CELLULOSE GUM. CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING COLORSTITANIUM DIOXIDE. YELLOW #5. YELLOW #6. RED #13. RED #41. BLUE #417. BLUE #37) DURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS. MILK. EGGS WHEAT FLOUR & YELLOW #5 SELL BY PACKED 5/16 WEIGHT(16) JAN.05.12 JAN.05.12 4.99 0.50 7 TOTAL PRICE $2.50 0 200007 702505 Globe Food Equipment Company 2153 Dryden Rd. Dayton. Oh 937-299-5493",
+          "resolvedModel": "amazon/nova-lite-v1",
+          "generationId": "gen-1775376328-hTgJukwhwjsh4hnLNp63",
+          "elapsed": 1192,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00015942
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend Nutrition Facts 16 servings per container Serving size 1 oz (28g) Amount Per Serving Calories 90 % Daily Value* Total Fat 1g 1% Saturated Fat 1g 5% Trans Fat 0g Cholesterol 0mg 0% Sodium 15mg 1% Total Carbohydrate 22g 8% Dietary Fiber 4g 14% Total Sugars 1g Includes 0g Added Sugars 0% Protein 2g Vitamin D 0mcg 0% Calcium 10mg 0% Iron 0.5mg 2% Potassium 10mg 0% * The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice. INGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM DIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "amazon/nova-lite-v1",
+          "generationId": "gen-1775376333-DiueDJiEYgW7CAr0vUyD",
+          "elapsed": 860,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001215
+        }
+      ]
+    },
+    "qwen/qwen3.5-flash-02-23": {
+      "id": "qwen/qwen3.5-flash-02-23",
+      "name": "Qwen: Qwen3.5-Flash",
+      "tier": "low",
+      "pricePerMInput": 0.065,
+      "pricePerMOutput": 0.26,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "al Carbohydrates 10g 4\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g 0%\nProtein 27g\nVitamin D 0ug 0%\nCalcium 48mg 3%\nIron 1.1mg 5%\nPotassium 141mg 3%\n* The Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice\n",
+          "resolvedModel": "qwen/qwen3.5-flash-20260224",
+          "generationId": "gen-1775376337-HTSknLDzACbm5qUFRodC",
+          "elapsed": 547,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00029549
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE,\nMONONITRATE (VITAMIN B1), RIBOFLAVIN,\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN,\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLOR:TITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #19, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED $/lb WEIGHT(lb)\nJAN.05.12 JAN.05.12 4.99 0.50\n0 200007 702505\nTOTAL PRICE 7\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493\n",
+          "resolvedModel": "qwen/qwen3.5-flash-20260224",
+          "generationId": "gen-1775376344-CEdEZwUZoaEeNhvjPbwG",
+          "elapsed": 623,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00026845
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203\n",
+          "resolvedModel": "qwen/qwen3.5-flash-20260224",
+          "generationId": "gen-1775376350-8VfZAOHmE3L3OLz22Ugo",
+          "elapsed": 975,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000233285
+        }
+      ]
+    },
+    "bytedance-seed/seed-1.6-flash": {
+      "id": "bytedance-seed/seed-1.6-flash",
+      "name": "ByteDance Seed: Seed 1.6 Flash",
+      "tier": "low",
+      "pricePerMInput": 0.075,
+      "pricePerMOutput": 0.3,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrate 15g\nDietary Fiber 3g\nTotal Sugars 10g 10%\nAdded Sugars 0g 0%\nProtein 2g\nVitamin A (0%)\nVitamin C (0%)\nCalcium (0%)\nIron (0%)\nSodium 145mg 145%\nThis product is made with simple ingredients. See nutrition facts for sodium content.\nIngredients: lettuce, lettuce, chicken, celery, tomato, onions, olive oil, lemon juice",
+          "resolvedModel": "bytedance-seed/seed-1.6-flash-20250625",
+          "generationId": "gen-1775376356-Ty90DLID9a239l6PaGQm",
+          "elapsed": 1119,
+          "detectedAllergens": [
+            "Celery"
+          ],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [
+              "Celery"
+            ],
+            "recall": 1,
+            "precision": 0
+          },
+          "cost": 0.000220425
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, IVITAMIN 21, FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, WHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\nCONTAINS ONE OR MORE OF THE FOLLOWING COLORISTAIUM DIOXIDE, YELLOW #6, RED #13, RED #41, BLUE #417, BLUE #37\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\nPACKED BY SELL BY JAN.05.12 JAN.05.12 4.99 0.50 WEIGHT(1b)\n0 200007 702505\nTOTAL PRICE $2.50\nGlobe Food Equipment Company 2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "bytedance-seed/seed-1.6-flash-20250625",
+          "generationId": "gen-1775376365-B6B0t656CXAsgYqAIBJH",
+          "elapsed": 633,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000924375
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "bytedance-seed/seed-1.6-flash-20250625",
+          "generationId": "gen-1775376388-idVvahUer1LOsjcUXw1G",
+          "elapsed": 943,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        }
+      ]
+    },
+    "mistralai/mistral-small-3.2-24b-instruct": {
+      "id": "mistralai/mistral-small-3.2-24b-instruct",
+      "name": "Mistral: Mistral Small 3.2 24B",
+      "tier": "low",
+      "pricePerMInput": 0.075,
+      "pricePerMOutput": 0.19999999999999998,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrates 10g\n\nDietary Fiber 3g\n10%\n\nAdded Sugars 0g\n0%\n\nProtein 22g\n\nVitamin D 0mcg\n0%\n\nCalcium 40mg\n4%\n\nIron 1.7mg\n10%\n\nPotassium 632mg\n15%\n\n* % of Daily Value (DV) per serving. The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nIngredients: Cheeseby, Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "mistralai/mistral-small-3.2-24b-instruct-2506",
+          "generationId": "gen-1775376394-55ZYIgY4WA1J30yJcSLj",
+          "elapsed": 526,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\n\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, VITAMIN 21, FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, UHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING COLORSTANIUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #417, BLUE #37)\n\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\n\nSELL BY JAN.05.12 PACKED JAN.05.12 4.99 0.50 WEIGHT(1B)\n\nBARCODE: 200007 702505\n\nTOTAL PRICE $2.50\n\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "mistralai/mistral-small-3.2-24b-instruct-2506",
+          "generationId": "gen-1775376397-gU1DGMnk2wIgJ4hV5KvW",
+          "elapsed": 194,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001059
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving\nCalories 90\n\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\n\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n\n*The % Daily Value (DV) tells you how much of a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "mistralai/mistral-small-3.2-24b-instruct-2506",
+          "generationId": "gen-1775376404-GMGh7behL1iYp1ZvQz7n",
+          "elapsed": 702,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001375
+        }
+      ]
+    },
+    "google/gemini-2.0-flash-lite-001": {
+      "id": "google/gemini-2.0-flash-lite-001",
+      "name": "Google: Gemini 2.0 Flash Lite",
+      "tier": "low",
+      "pricePerMInput": 0.075,
+      "pricePerMOutput": 0.3,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\nutal Carbohydrates 10g\nDietary Fiber 3g\n10%\nTotal Sugars ög\nAdded Sugars Og\n0%\nProtein 22g\nVitamin D Dug\nCalcium 40mg\nIron 1.1mg\nPotassium 680mg\n0%\n3%\n6%\n14%\nThe Daily Value(DV) tell you how much a nutrient in a\nserving of food contributes to dally diet 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice\n",
+          "resolvedModel": "google/gemini-2.0-flash-lite-001",
+          "generationId": "gen-1775376409-NItzAZLxNffQX94oaYB2",
+          "elapsed": 1085,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000648
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE.\nMONONITRATE (VITAMIN B1), RIBOFLAVIN.\n(VITAMIN 2), FOLIC ACID, CANOLA OIL & OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA.\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN.\nCHOCOLATE, SUGAR, UHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY\nPACKED\n5/16\nUEIGHT(16)\nJAN.05.12 JAN.05.12\n4.99\n0.50\n7\nTOTAL PRICE\n0 200007 702505\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493\n",
+          "resolvedModel": "google/gemini-2.0-flash-lite-001",
+          "generationId": "gen-1775376412-dX4Zoq2VGdKVaqSNO6T4",
+          "elapsed": 1287,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001977
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size\n1 oz (28g)\nAmount Per Serving\nCalories\n90\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat 0g\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes 0g Added Sugars\n0%\nProtein 2g\nVitamin D 0mcg\n0%\nCalcium 10mg\n0%\nIron 0.5mg\n2%\nPotassium 10mg\n0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR, MILLET\nFLOUR, ORGANIC AMARANTH FLOUR,\nXANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203\n",
+          "resolvedModel": "google/gemini-2.0-flash-lite-001",
+          "generationId": "gen-1775376416-rdvhYUc27YWvnJsGa3Dt",
+          "elapsed": 1216,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0002589
+        }
+      ]
+    },
+    "qwen/qwen3-vl-8b-instruct": {
+      "id": "qwen/qwen3-vl-8b-instruct",
+      "name": "Qwen: Qwen3 VL 8B Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.08,
+      "pricePerMOutput": 0.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Dietary Carbohydrates 10g\nDietary Fiber 3g\nTotal Sugars 3g\nAdded Sugars 0g\nProtein 22g\nVitamin D 0ug\nCalcium 40mg\nIron 1.5mg\nPotassium 580mg\n*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "qwen/qwen3-vl-8b-instruct",
+          "generationId": "gen-1775376420-juMqsUjub3DVMUVQy3Pk",
+          "elapsed": 603,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000073632
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE,\nMONONITRATE (VITAMIN B1), RIBOFLAVIN,\n(VITAMIN B2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN,\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK,\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLOR: TITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED s/1b WEIGHT(1b)\nJAN.05.12 JAN.05.12 4.99 0.50\nTOTAL PRICE 7\n$2.50\n0'200007'702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "qwen/qwen3-vl-8b-instruct",
+          "generationId": "gen-1775376423-pKHhXlivkqpAVfc8c3r7",
+          "elapsed": 374,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00029208
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat 0g\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes 0g Added Sugars\n0%\nProtein 2g\nVitamin D 0mcg\n0%\nCalcium 10mg\n0%\nIron 0.5mg\n2%\nPotassium 10mg\n0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR, MILLET\nFLOUR, ORGANIC AMARANTH FLOUR,\nXANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "qwen/qwen3-vl-8b-instruct",
+          "generationId": "gen-1775376430-PMIgQaZlZY00gxYjEBfM",
+          "elapsed": 968,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00016518
+        }
+      ]
+    },
+    "meta-llama/llama-4-scout": {
+      "id": "meta-llama/llama-4-scout",
+      "name": "Meta: Llama 4 Scout",
+      "tier": "low",
+      "pricePerMInput": 0.08,
+      "pricePerMOutput": 0.3,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "%Daily Value* (DV) (12g)\nEnergy, Total Fat  1g           1%\nTotal Carbohydrates            19g\nAdded Sugars 3g               6%\nThe % Daily Value\nVitamin A        6%\nCalcium          2%\nIron            6%\nPotassium       14%\n*The % Daily Value (DV) is a guide to help you make informed choices about how much of a nutrient product will provide. For your individual needs, daily value may be higher or lower. Your nutritional needs may be higher or lower. Daily values are based on a 2,000 calorie diet.\nManufactured by: Krishna Foods, Inc., OAK GROVE, OR. Compliments of Loblaws Limited.",
+          "resolvedModel": "meta-llama/llama-4-scout-17b-16e-instruct",
+          "generationId": "gen-1775376436-s2WTwIpY230Fmyi2r0qG",
+          "elapsed": 86,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00007515
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, \nMONONITRATE (VITAMIN B1), RIBOFLAVIN. \n(VITAMIN B2), FOLIC ACID, CANOLA OIL &/OR PALM \nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, \nCORNSTARCH, SALT SOY LECITHIN, VANILLIN, \nCHOCOLATE, SUGAR, WHEY, NONFAT MILK, \nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. \n(CONTAINS ONE OR MORE OF THE FOLLOWING \nCOLOSTINTANIUM DIOXIDE, YELLOW #5, YELLOW \n#6, RED #13, RED #41, BLUE #17, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT \nMAY COME IN CONTACT WITH THESE \nKNOWN ALLERGENS: PEANUTS, MILK, \nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED $/lb WEIGHT(1lb)\nJAN.05.12 JAN.05.12 4.99 0.50\nTOTAL PRICE\n0 200007 702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh  937-299-5493\n$2.50",
+          "resolvedModel": "meta-llama/llama-4-scout-17b-16e-instruct",
+          "generationId": "gen-1775376438-fA8HD7B2vq7iFoldeMKo",
+          "elapsed": 422,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00019607
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving Calories 90\nTotal Fat 1g % Daily Value*\nSaturated Fat 1g 5%\nTrans Fat 0g \nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g \nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "meta-llama/llama-4-scout-17b-16e-instruct",
+          "generationId": "gen-1775376441-s2njzQUzRJqzpwn2rEJa",
+          "elapsed": 267,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.00015902
+        }
+      ]
+    },
+    "google/gemma-3-27b-it": {
+      "id": "google/gemma-3-27b-it",
+      "name": "Google: Gemma 3 27B",
+      "tier": "low",
+      "pricePerMInput": 0.08,
+      "pricePerMOutput": 0.16,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrates 10g\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g 0%\nProtein 22g\nVitamin D 0ug 0%\nCalcium 40mg 3%\nPotassium 680mg 14%\n* The % Daily Value (DV) tells you how much a nutrient in\na serving of food contributes to a daily diet. 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "google/gemma-3-27b-it",
+          "generationId": "gen-1775376448-Tqaajm2bIqGmzhdHfDDp",
+          "elapsed": 160,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000468
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, REDUCED IRON, THIAMINE\n(VITAMIN B1), VITAMIN B2, RIBOFLAVIN,\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN,\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK,\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #17, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED 5/16 WEIGHT(16)\nJAN.05.12 JAN.05.12 4.99 0.50\n0 200007 702505\nTOTAL PRICE $2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "google/gemma-3-27b-it",
+          "generationId": "gen-1775376455-2c4RdO0b0jyBLGJjMu48",
+          "elapsed": 519,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000100009
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\nTotal Fat 1g % Daily Value*\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR, MILLET\nFLOUR, ORGANIC AMARANTH FLOUR,\nXANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "google/gemma-3-27b-it",
+          "generationId": "gen-1775376465-M4wb0i9gsfZ31w3eKT4F",
+          "elapsed": 183,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        }
+      ]
+    },
+    "rekaai/reka-edge": {
+      "id": "rekaai/reka-edge",
+      "name": "Reka Edge",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.09999999999999999,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "AllCarbohydrates 1g DietaryFiber3g TotalSugars20g ProteinAddedSugars0g VitaminD0ug Calcium0mg Iron2.3mg Potassium50mg Sodium1.4mg *AllCarbohydrates 1g DietaryFiber3g TotalSugars20g ProteinAddedSugars0g VitaminD0ug Calcium0mg Iron2.3mg Potassium50mg Sodium1.4mg *Ingrédients:Leborg Lecithin,Chicken,Cherry Tomato,Onions,Oil,LemonJus\n\n",
+          "resolvedModel": "rekaai/reka-edge-2603",
+          "generationId": "gen-1775376472-ykDOvNlVfYuhPIWVChUZ",
+          "elapsed": 1182,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000235
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "INGREDIENTS: SWEET COOKIE WHEAT FIBER, VITAMIN B1, RIBOFLAVIN, NUTRIENT FOLIC ACID, COTYPIA OIL, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR, SUGAR,",
+          "resolvedModel": "rekaai/reka-edge-2603",
+          "generationId": "gen-1775376475-Xp2JRKKc4k1y5SMVc4I4",
+          "elapsed": 1375,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 5,
+            "missedAllergens": [
+              "Milk & Dairy",
+              "Egg",
+              "Soy",
+              "Peanut"
+            ],
+            "falsePositives": [],
+            "recall": 0.2,
+            "precision": 1
+          },
+          "cost": 0.0001137
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "```text\nGluten Free Flour Blend\nNutrition Facts\n16 servings per container\n1 oz (28g)\nServing size\nAmount Per Serving\n90\nCalories\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nCholesterol 0mg\n0%\nSodium 150mg\n18%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nIncludes Sugars\n0%\nProtein 2g\n0%\nThe % Daily Value (DV) toys you much more a nutrient in a serving of the food than a day's worth of food is used for general nutrition advice.\nIngredients: Taroko Flour, Coconut Flour, Millet Flour, Organic Amaranth Flour, Dvinelty Gluten Free Albyn, NY 12203\n```\n\n",
+          "resolvedModel": "rekaai/reka-edge-2603",
+          "generationId": "gen-1775376484-b2kQgjabptP3w5T16vms",
+          "elapsed": 1115,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000483
+        }
+      ]
+    },
+    "bytedance-seed/seed-2.0-mini": {
+      "id": "bytedance-seed/seed-2.0-mini",
+      "name": "ByteDance Seed: Seed-2.0-Mini",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\notal Carbohydrates 10g\nDietary Fiber 3g\n10%\nTotal Sugars 6g\nAdded Sugars 0g\n0%\nProtein 22g\n\nVitamin D 0ug\n0%\nCalcium 40mg\n3%\nIron 1.1mg\n6%\nPotassium 680mg\n14%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "bytedance-seed/seed-2.0-mini-20260224",
+          "generationId": "gen-1775376488-ZYCVePkEGBIZqDdZPNz9",
+          "elapsed": 1297,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0004713
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE,\nMONONITRATE {VITAMIN B1}, RIBOFLAVIN,\n{VITAMIN 2}, FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN.\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY        PACKED        S/lb       UEIGHT(1b)\nJAN.05.12   JAN.05.12     4.99        0.50\n0 200007 702505\nTOTAL PRICE 7\n$2.50\nGlobe Food Equipment Conpany\n2153 Dryden Rd.  Dayton, Oh  937-299-5493",
+          "resolvedModel": "bytedance-seed/seed-2.0-mini-20260224",
+          "generationId": "gen-1775376516-5fP6CEPGwDkhPCysO6oO",
+          "elapsed": 1195,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size          1 oz (28g)\nAmount Per Serving\nCalories                90\n% Daily Value*\nTotal Fat 1g                            1%\nSaturated Fat 1g                        5%\nTrans Fat 0g\nCholesterol 0mg                         0%\nSodium 15mg                             1%\nTotal Carbohydrate 22g                  8%\nDietary Fiber 4g                       14%\nTotal Sugars 1g\nIncludes 0g Added Sugars               0%\nProtein 2g\nVitamin D 0mcg                          0%\nCalcium 10mg                            0%\nIron 0.5mg                              2%\nPotassium 10mg                          0%\n*The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR,  ARROWROOT  FLOUR,  MILLET\nFLOUR,  ORGANIC  AMARANTH  FLOUR,\nXANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "bytedance-seed/seed-2.0-mini-20260224",
+          "generationId": "gen-1775376557-Mqsl1MKCtUk1akwUBPn9",
+          "elapsed": 1238,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0006711
+        }
+      ]
+    },
+    "mistralai/ministral-3b-2512": {
+      "id": "mistralai/ministral-3b-2512",
+      "name": "Mistral: Ministral 3 3B 2512",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.09999999999999999,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Jutl Carbohydrates 10g\n\nDietary Fiber 3g\n10%\n\nAdded Sugars 0g\n0%\n\nProtein 22g\n\nVitamin D 0mcg\n0%\n\nCalcium 40mg\n2%\n\nIron 1.9mg\n1%\n\nPotassium 430mg\n1%\n\nNote: Your daily value (DV) for nutrients is based on a 2,000 calorie diet. For general nutrition advice.\n\nIngredients:\nCebery, Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "mistralai/ministral-3b-2512",
+          "generationId": "gen-1775376597-s1wtHvYnNpFWdCHV5zR0",
+          "elapsed": 408,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000027
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\n\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, VITAMIN B6, FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT, SOY LECITHIN, URACIL, CHOCOLATE, SUGAR, UHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. CONTAINS ONE OR MORE OF THE FOLLOWING COLORANT: TITANIUM DIOXIDE, YELLOW 5, YELLOW 6, RED 13, RED 41, BLUE 417, BLUE 37\n\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS, WHEAT FLOUR & YELLOW #5\n\nSELL BY PACKED 5/1b WEIGHT(1b)\nJAN.05.12 JAN.05.12 4.99 0.50\n\nTOTAL PRICE $2.50\n\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493\n\n0200007702505",
+          "resolvedModel": "mistralai/ministral-3b-2512",
+          "generationId": "gen-1775376600-PQgR8xJJOjrlqCWfIZ8s",
+          "elapsed": 433,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000775
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving\nCalories 90\n\n% Daily Value*\n\nTotal Fat 1g\nSaturated Fat 1g\nTrans Fat 0g\n\nCholesterol 0mg\nSodium 15mg\nTotal Carbohydrate 22g\nDietary Fiber 4g\nTotal Sugars 1g\nIncludes 0g Added Sugars\n\nProtein 2g\n\nVitamin D 0mcg\nCalcium 10mg\nIron 0.5mg\nPotassium 10mg\n\n*The % Daily Value tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWOOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "mistralai/ministral-3b-2512",
+          "generationId": "gen-1775376603-mDKTuNzro8ka6zWlhdQ7",
+          "elapsed": 582,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000769
+        }
+      ]
+    },
+    "google/gemini-2.5-flash-lite-preview-09-2025": {
+      "id": "google/gemini-2.5-flash-lite-preview-09-2025",
+      "name": "Google: Gemini 2.5 Flash Lite Preview 09-2025",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\nutal Carbohydrates 10g\nDietary Fiber 3g\n10%\nTotal Sugars ög\nAdded Sugars Og\n0%\nProtein 22g\nVitamin D Dug\nCalcium 40mg\nIron 1.1mg\nPotassium 680mg\n0%\n3%\n6%\n14%\nThe Daily Value(DV) tell you how much a nutrient in a\nserving of food contributes to dally diet 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "google/gemini-2.5-flash-lite-preview-09-2025",
+          "generationId": "gen-1775376606-7qTzfecuUiOgnmlNYH2j",
+          "elapsed": 869,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000086
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE.\nMONONITRATE (VITAMIN B1), RIBOFLAVIN.\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA.\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN.\nCHOCOLATE, SUGAR, UHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE =417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY\nPACKED\nS/16\nUEIGHT(16)\nJAN.05.12 JAN.05.12\n4.99\n0.50\n7\nTOTAL PRICE\n0 200007 702505\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "google/gemini-2.5-flash-lite-preview-09-2025",
+          "generationId": "gen-1775376609-ONQqW49YqtnofOUEhPzO",
+          "elapsed": 1005,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0002632
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size\n1 oz (28g)\nAmount Per Serving\nCalories\n90\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat 0g\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes 0g Added Sugars\n0%\nProtein 2g\nVitamin D 0mcg\n0%\nCalcium 10mg\n0%\nIron 0.5mg\n2%\nPotassium 10mg\n0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR, MILLET\nFLOUR, ORGANIC AMARANTH FLOUR,\nXANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "google/gemini-2.5-flash-lite-preview-09-2025",
+          "generationId": "gen-1775376612-LzWcj5VM8VMlgTgiF7q7",
+          "elapsed": 2256,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0003448
+        }
+      ]
+    },
+    "bytedance/ui-tars-1.5-7b": {
+      "id": "bytedance/ui-tars-1.5-7b",
+      "name": "ByteDance: UI-TARS 7B ",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.19999999999999998,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrates: 1g\nDietary Fiber: 3g\nTotal Sugars: 6g\nAdded Sugars: 6g\nProtein: 0g\nVitamin D: 0%\nCalcium: 0%\nIron: 0%\nFats and Saturated Fats: 1g\nCholesterol: 0mg\nSodium: 0mg\nThe % Daily Value (DV) shows the percentage of a nutrient in a diet. 1,000 calories a day is used for general nutrition advice. Your daily values may be higher or lower depending on your calorie needs.\nIngredients: Jleberry, Lettuce, Chicken, Cherry, Tomato, Onions, Olive Oil, Lemon-Juice",
+          "resolvedModel": "bytedance/ui-tars-1.5-7b",
+          "generationId": "gen-1775376617-IJDbpFbBTOHHZzAmYBZb",
+          "elapsed": 392,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN (VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT, SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, WHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING) COLORSTANTINUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\nSELL BY\nPACKED\n$/lb\nWEIGHT (lb)\nJAN.05.12\nJAN.05.12\n4.99\n0.50\nTOTAL PRICE\n$2.50\n0 200007 702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "bytedance/ui-tars-1.5-7b",
+          "generationId": "gen-1775376620-whgQhXtXYnRoAhk06r9L",
+          "elapsed": 456,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001077
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "bytedance/ui-tars-1.5-7b",
+          "generationId": "gen-1775376626-w0lH39ZDIelyZ9EJV7EO",
+          "elapsed": 650,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000993
+        }
+      ]
+    },
+    "google/gemini-2.5-flash-lite": {
+      "id": "google/gemini-2.5-flash-lite",
+      "name": "Google: Gemini 2.5 Flash Lite",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\nutal Carbohydrates 10g\nDietary Fiber 3g\n10%\nTotal Sugars ög\nAdded Sugars Og\n0%\nProtein 22g\nVitamin D Dug\nCalcium 40mg\nIron 1.1mg\nPotassium 680mg\n0%\n3%\n6%\n14%\nThe Daily Value(DV) tell you how much a nutrient in a\nserving of food contributes to dally diet 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "google/gemini-2.5-flash-lite",
+          "generationId": "gen-1775376631-jmgLB5VP3E8dvD4ilOWl",
+          "elapsed": 1016,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000086
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE.\nMONONITRATE (VITAMIN B1), RIBOFLAVIN.\n(VITAMIN 2), FOLIC ACID, CANOLA OIL & OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA.\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN.\nCHOCOLATE, SUGAR, UHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE 417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY\nPACKED\n5/16\nUEIGHT(16)\nJAN.05.12 JAN.05.12\n4.99\n0.50\n7\nTOTAL PRICE\n0 200007 702505\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "google/gemini-2.5-flash-lite",
+          "generationId": "gen-1775376634-epVrKBAlzP7RtJ0O9xhq",
+          "elapsed": 1186,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size\n1 oz (28g)\nAmount Per Serving\nCalories\n90\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat Og\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes Og Added Sugars\n0%\nProtein 2g\nVitamin D 0mcg\nCalcium 10mg\nIron 0.5mg\nPotassium 10mg\n0%\n0%\n2%\n0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR,\nFLOUR, ORGANIC AMARANTH\nXANTHAN GUM\nMILLET\nFLOUR,\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "google/gemini-2.5-flash-lite",
+          "generationId": "gen-1775376639-DyBP5VRj95DYiwflYN0y",
+          "elapsed": 1200,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": null
+        }
+      ]
+    },
+    "openai/gpt-4.1-nano": {
+      "id": "openai/gpt-4.1-nano",
+      "name": "OpenAI: GPT-4.1 Nano",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrates 10g\nDietary Fiber 3g\nTotal Sugars 6g\nAdded Sugars 0g\nProtein 22g\nVitamin D 0ug\nCalcium 40mg\nIron 1.1mg\nPotassium 680mg\n(%) \n*The Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice.\n\nIngredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "openai/gpt-4.1-nano-2025-04-14",
+          "generationId": "gen-1775376642-Nr2ER1oPMbgXiNHqsyz2",
+          "elapsed": 398,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000688
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIANTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, MAGNIN, REDUCED IRON, THIAMINE MONONITRATE (VITAMIN B1), RIBOFLAVIN, (VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT, SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, WHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN. (CONTAINS ONE OR MORE OF THE FOLLOWING COLORSTATIONIUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED WEIGHT(16b) JAN.05.12 JAN.05.12 4.99 0.50\nTOTAL PRICE 7 $2.50\n0 200007 702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "openai/gpt-4.1-nano-2025-04-14",
+          "generationId": "gen-1775376646-hEDhHT4Mr6bNbxhvnsAE",
+          "elapsed": 293,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001924
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\n\nAmount Per Serving Calories 90\n% Daily Value*\n\nTotal Fat 1g 1%\nSaturated Fat 1g 5%\nTrans Fat 0g\n\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\nDietary Fiber 4g 14%\nTotal Sugars 1g\nIncludes 0g Added Sugars 0%\n\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n\n*The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "openai/gpt-4.1-nano-2025-04-14",
+          "generationId": "gen-1775376650-zxezLgGeIHvluXmwIJou",
+          "elapsed": 946,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001819
+        }
+      ]
+    },
+    "google/gemini-2.0-flash-001": {
+      "id": "google/gemini-2.0-flash-001",
+      "name": "Google: Gemini 2.0 Flash",
+      "tier": "low",
+      "pricePerMInput": 0.09999999999999999,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "mg\nutal Carbohydrates 10g\nDietary Fiber 3g\n10%\nTotal Sugars ög\nAdded Sugars Og\n0%\nProtein 22g\nVitamin D Dug\nCalcium 40mg\nIron 1.1mg\nPotassium 680mg\n0%\n3%\n6%\n14%\nThe Daily Value(DV) tell you how much a nutrient in a\nserving of food contributes to dally diet 2,000 calories a\nday is used for general nutrition advice.\nIngredients: Iceberg Lettuce, Chicken, Cherry\nTomato, Onions, Olive Oil, Lemon Juice\n",
+          "resolvedModel": "google/gemini-2.0-flash-001",
+          "generationId": "gen-1775376655-Bi7FcjqOUl3kFoybVF2S",
+          "elapsed": 865,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000864
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE.\nMONONITRATE (VITAMIN B1), RIBOFLAVIN.\n(VITAMIN 2), FOLIC ACID, CANOLA OIL & OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA.\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN.\nCHOCOLATE, SUGAR, UHEY, NONFAT MILK.\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORSTITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE 417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK.\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY\nPACKED\n5/16\nUEIGHT(16)\nJAN.05.12 JAN.05.12\n4.99\n0.50\n7\nTOTAL PRICE\n0 200007 702505\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493\n",
+          "resolvedModel": "google/gemini-2.0-flash-001",
+          "generationId": "gen-1775376658-Mcx3opJGANKXtAsWtUSt",
+          "elapsed": 1189,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0002636
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\nNutrition Facts\n16 servings per container\nServing size\n1 oz (28g)\nAmount Per Serving\nCalories\n90\n% Daily Value*\nTotal Fat 1g\n1%\nSaturated Fat 1g\n5%\nTrans Fat Og\nCholesterol 0mg\n0%\nSodium 15mg\n1%\nTotal Carbohydrate 22g\n8%\nDietary Fiber 4g\n14%\nTotal Sugars 1g\nIncludes Og Added Sugars\n0%\nProtein 2g\nVitamin D 0mcg\nCalcium 10mg\nIron 0.5mg\nPotassium 10mg\n0%\n0%\n2%\n0%\n* The % Daily Value (DV) tells you how much a nutrient in a\nserving of food contributes to a daily diet. 2,000 calories a day is\nused for general nutrition advice.\nINGREDIENTS: TAPIOCA FLOUR, COCONUT\nFLOUR, ARROWROOT FLOUR,\nFLOUR, ORGANIC AMARANTH\nXANTHAN GUM\nMILLET\nFLOUR,\nDIVINELY GLUTEN FREE ALBANY, NY 12203\n",
+          "resolvedModel": "google/gemini-2.0-flash-001",
+          "generationId": "gen-1775376662-Kryxl2eqfWDkeFV2urAY",
+          "elapsed": 1107,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0003444
+        }
+      ]
+    },
+    "qwen/qwen3-vl-32b-instruct": {
+      "id": "qwen/qwen3-vl-32b-instruct",
+      "name": "Qwen: Qwen3 VL 32B Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.10400000000000001,
+      "pricePerMOutput": 0.41600000000000004,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Total Carbohydrate 10g\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g 0%\nProtein 20g\nVitamin D 0μg 0%\nCalcium 40mg 3%\nIron 3.1mg 14%\nPotassium 840mg 14%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2000 calories a day is used for general nutrition advice.\nIngredients: Seaberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "qwen/qwen3-vl-32b-instruct",
+          "generationId": "gen-1775376666-7uli78DKOdrg05d0QCen",
+          "elapsed": 565,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0000728
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT\nFLOUR, NIACIN, REDUCED IRON, THIAMINE,\nMONONITRATE (VITAMIN B1), RIBOFLAVIN,\n(VITAMIN 2), FOLIC ACID, CANOLA OIL &/OR PALM\nOIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA,\nCORNSTARCH, SALT SOY LECITHIN, VANILLIN,\nCHOCOLATE, SUGAR, WHEY, NONFAT MILK,\nARTIFICIAL FLAVOR, CELLULOSE GUM, CARRAGEENAN.\n(CONTAINS ONE OR MORE OF THE FOLLOWING\nCOLORS:TITANIUM DIOXIDE, YELLOW #5, YELLOW\n#6, RED #13, RED #41, BLUE #417, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT\nMAY COME IN CONTACT WITH THESE\nKNOWN ALLERGENS: PEANUTS, MILK,\nEGGS WHEAT FLOUR & YELLOW #5\nSELL BY PACKED s/lb UEIGHT(1b)\nJAN.05.12 JAN.05.12 4.99 0.50\n0 200007 702505\nTOTAL PRICE 7\n$2.50\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "qwen/qwen3-vl-32b-instruct",
+          "generationId": "gen-1775376669-ExHppfohSP7X8b1aDty9",
+          "elapsed": 723,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.0001768
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "extractedText": "Gluten Free Flour Blend\n\nNutrition Facts\n16 servings per container\nServing size 1 oz (28g)\nAmount Per Serving\nCalories 90\n% Daily Value*\nTotal Fat 1g 1%\n  Saturated Fat 1g 5%\n  Trans Fat 0g\nCholesterol 0mg 0%\nSodium 15mg 1%\nTotal Carbohydrate 22g 8%\n  Dietary Fiber 4g 14%\n  Total Sugars 1g\n    Includes 0g Added Sugars 0%\nProtein 2g\nVitamin D 0mcg 0%\nCalcium 10mg 0%\nIron 0.5mg 2%\nPotassium 10mg 0%\n* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.\n\nINGREDIENTS: TAPIOCA FLOUR, COCONUT FLOUR, ARROWROOT FLOUR, MILLET FLOUR, ORGANIC AMARANTH FLOUR, XANTHAN GUM\n\nDIVINELY GLUTEN FREE ALBANY, NY 12203",
+          "resolvedModel": "qwen/qwen3-vl-32b-instruct",
+          "generationId": "gen-1775376676-KGZuYaTeV2KV8XmEIFwe",
+          "elapsed": 1096,
+          "detectedAllergens": [
+            "Wheat & Gluten"
+          ],
+          "accuracy": {
+            "truePositives": 1,
+            "totalExpected": 1,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.000150488
+        }
+      ]
+    },
+    "qwen/qwen3-vl-8b-thinking": {
+      "id": "qwen/qwen3-vl-8b-thinking",
+      "name": "Qwen: Qwen3 VL 8B Thinking",
+      "tier": "low",
+      "pricePerMInput": 0.117,
+      "pricePerMOutput": 1.365,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "extractedText": "Calories 100\nTotal Fat 0g 0%\nSaturated Fat 0g 0%\nTrans Fat 0g\nCholesterol 0mg 0%\nSodium 5mg 0%\nTotal Carbohydrates 10g 10%\nDietary Fiber 3g 10%\nTotal Sugars 6g\nAdded Sugars 0g 0%\nProtein 20g\nVitamin D 0ug 0%\nCalcium 45mg 5%\nIron 0.7mg 15%\nPotassium 280mg 14%\nPer Daily Value % per 100g serving of this food provides a percent of the daily value. % Daily Value* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for these calculations.\nIngredients: Iceberg Lettuce, Chicken, Cherry Tomato, Onions, Olive Oil, Lemon Juice",
+          "resolvedModel": "qwen/qwen3-vl-8b-thinking",
+          "generationId": "gen-1775376682-crFsWT5XqBNgkCQOkBiV",
+          "elapsed": 638,
+          "detectedAllergens": [],
+          "accuracy": {
+            "truePositives": 0,
+            "totalExpected": 0,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.002837991
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "extractedText": "SWEET COOKIE\nINGREDIENTS: SUGAR, ENRICHED FLOUR, WHEAT FLOUR, NIACIN, REDUCED IRON, THIAMINE, MONONITRATE (VITAMIN B1), RIBOFLAVIN, (VITAMIN B2), FOLIC ACID, CANOLA OIL &/OR PALM OIL, HIGH FRUCTOSE CORN SYRUP, BAKING SODA, CORNSTARCH, SALT, SOY LECITHIN, VANILLIN, CHOCOLATE, SUGAR, WHEY, NONFAT MILK, ARTIFICIAL FLAVOR, CELLULOSE GUM, CARAGEEENAN (CONTAINS ONE OR MORE OF THE FOLLOWING COLORANT: TITANIUM DIOXIDE, YELLOW #5, YELLOW #6, RED #13, RED #41, BLUE #41, BLUE #37)\nDURING MANUFACTURING OUR PRODUCT MAY COME IN CONTACT WITH THESE KNOWN ALLERGENS: PEANUTS, MILK, EGGS WHEAT FLOUR & YELLOW #5\nSELL BY JAN.05.12\nPACKED JAN.05.12\n5/1b\nWEIGHT(1b) 0.50\nTOTAL PRICE 7\n$2.50\n0 200007 702505\nGlobe Food Equipment Company\n2153 Dryden Rd. Dayton, Oh 937-299-5493",
+          "resolvedModel": "qwen/qwen3-vl-8b-thinking",
+          "generationId": "gen-1775376698-tZI0w8h2hMa7LgClq6NZ",
+          "elapsed": 644,
+          "detectedAllergens": [
+            "Wheat & Gluten",
+            "Soy",
+            "Milk & Dairy",
+            "Peanut",
+            "Egg"
+          ],
+          "accuracy": {
+            "truePositives": 5,
+            "totalExpected": 5,
+            "missedAllergens": [],
+            "falsePositives": [],
+            "recall": 1,
+            "precision": 1
+          },
+          "cost": 0.006944535
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 132,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "google/gemma-4-26b-a4b-it": {
+      "id": "google/gemma-4-26b-a4b-it",
+      "name": "Google: Gemma 4 26B A4B ",
+      "tier": "low",
+      "pricePerMInput": 0.13,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 106,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 94,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3-vl-30b-a3b-thinking": {
+      "id": "qwen/qwen3-vl-30b-a3b-thinking",
+      "name": "Qwen: Qwen3 VL 30B A3B Thinking",
+      "tier": "low",
+      "pricePerMInput": 0.13,
+      "pricePerMOutput": 1.56,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3-vl-30b-a3b-instruct": {
+      "id": "qwen/qwen3-vl-30b-a3b-instruct",
+      "name": "Qwen: Qwen3 VL 30B A3B Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.13,
+      "pricePerMOutput": 0.52,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 53,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen-vl-plus": {
+      "id": "qwen/qwen-vl-plus",
+      "name": "Qwen: Qwen VL Plus",
+      "tier": "low",
+      "pricePerMInput": 0.1365,
+      "pricePerMOutput": 0.40950000000000003,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 45,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 51,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 50,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "google/gemma-4-31b-it": {
+      "id": "google/gemma-4-31b-it",
+      "name": "Google: Gemma 4 31B",
+      "tier": "low",
+      "pricePerMInput": 0.14,
+      "pricePerMOutput": 0.39999999999999997,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "baidu/ernie-4.5-vl-28b-a3b": {
+      "id": "baidu/ernie-4.5-vl-28b-a3b",
+      "name": "Baidu: ERNIE 4.5 VL 28B A3B",
+      "tier": "low",
+      "pricePerMInput": 0.14,
+      "pricePerMOutput": 0.56,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 55,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "mistralai/mistral-small-2603": {
+      "id": "mistralai/mistral-small-2603",
+      "name": "Mistral: Mistral Small 4",
+      "tier": "low",
+      "pricePerMInput": 0.15,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 58,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 49,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "mistralai/ministral-8b-2512": {
+      "id": "mistralai/ministral-8b-2512",
+      "name": "Mistral: Ministral 3 8B 2512",
+      "tier": "low",
+      "pricePerMInput": 0.15,
+      "pricePerMOutput": 0.15,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 56,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "meta-llama/llama-4-maverick": {
+      "id": "meta-llama/llama-4-maverick",
+      "name": "Meta: Llama 4 Maverick",
+      "tier": "low",
+      "pricePerMInput": 0.15,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-4o-mini-2024-07-18": {
+      "id": "openai/gpt-4o-mini-2024-07-18",
+      "name": "OpenAI: GPT-4o-mini (2024-07-18)",
+      "tier": "low",
+      "pricePerMInput": 0.15,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 185,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-4o-mini": {
+      "id": "openai/gpt-4o-mini",
+      "name": "OpenAI: GPT-4o-mini",
+      "tier": "low",
+      "pricePerMInput": 0.15,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 41,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3.5-35b-a3b": {
+      "id": "qwen/qwen3.5-35b-a3b",
+      "name": "Qwen: Qwen3.5-35B-A3B",
+      "tier": "low",
+      "pricePerMInput": 0.1625,
+      "pricePerMOutput": 1.3,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "arcee-ai/spotlight": {
+      "id": "arcee-ai/spotlight",
+      "name": "Arcee AI: Spotlight",
+      "tier": "low",
+      "pricePerMInput": 0.18,
+      "pricePerMOutput": 0.18,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 45,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "meta-llama/llama-guard-4-12b": {
+      "id": "meta-llama/llama-guard-4-12b",
+      "name": "Meta: Llama Guard 4 12B",
+      "tier": "low",
+      "pricePerMInput": 0.18,
+      "pricePerMOutput": 0.18,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3.5-27b": {
+      "id": "qwen/qwen3.5-27b",
+      "name": "Qwen: Qwen3.5-27B",
+      "tier": "low",
+      "pricePerMInput": 0.195,
+      "pricePerMOutput": 1.56,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 41,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-5.4-nano": {
+      "id": "openai/gpt-5.4-nano",
+      "name": "OpenAI: GPT-5.4 Nano",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 1.25,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 44,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "mistralai/ministral-14b-2512": {
+      "id": "mistralai/ministral-14b-2512",
+      "name": "Mistral: Ministral 3 14B 2512",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.19999999999999998,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 41,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "x-ai/grok-4.1-fast": {
+      "id": "x-ai/grok-4.1-fast",
+      "name": "xAI: Grok 4.1 Fast",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 54,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "nvidia/nemotron-nano-12b-v2-vl": {
+      "id": "nvidia/nemotron-nano-12b-v2-vl",
+      "name": "NVIDIA: Nemotron Nano 12B 2 VL",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 46,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3-vl-235b-a22b-instruct": {
+      "id": "qwen/qwen3-vl-235b-a22b-instruct",
+      "name": "Qwen: Qwen3 VL 235B A22B Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.88,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "x-ai/grok-4-fast": {
+      "id": "x-ai/grok-4-fast",
+      "name": "xAI: Grok 4 Fast",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 27,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen2.5-vl-32b-instruct": {
+      "id": "qwen/qwen2.5-vl-32b-instruct",
+      "name": "Qwen: Qwen2.5 VL 32B Instruct",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 0.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 51,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "minimax/minimax-01": {
+      "id": "minimax/minimax-01",
+      "name": "MiniMax: MiniMax-01",
+      "tier": "low",
+      "pricePerMInput": 0.19999999999999998,
+      "pricePerMOutput": 1.1,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "bytedance-seed/seed-2.0-lite": {
+      "id": "bytedance-seed/seed-2.0-lite",
+      "name": "ByteDance Seed: Seed-2.0-Lite",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 57,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "google/gemini-3.1-flash-lite-preview": {
+      "id": "google/gemini-3.1-flash-lite-preview",
+      "name": "Google: Gemini 3.1 Flash Lite Preview",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 1.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "bytedance-seed/seed-1.6": {
+      "id": "bytedance-seed/seed-1.6",
+      "name": "ByteDance Seed: Seed 1.6",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 48,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-5.1-codex-mini": {
+      "id": "openai/gpt-5.1-codex-mini",
+      "name": "OpenAI: GPT-5.1-Codex-Mini",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 30,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 47,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-5-mini": {
+      "id": "openai/gpt-5-mini",
+      "name": "OpenAI: GPT-5 Mini",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "anthropic/claude-3-haiku": {
+      "id": "anthropic/claude-3-haiku",
+      "name": "Anthropic: Claude 3 Haiku",
+      "tier": "low",
+      "pricePerMInput": 0.25,
+      "pricePerMOutput": 1.25,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 52,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3.5-122b-a10b": {
+      "id": "qwen/qwen3.5-122b-a10b",
+      "name": "Qwen: Qwen3.5-122B-A10B",
+      "tier": "low",
+      "pricePerMInput": 0.26,
+      "pricePerMOutput": 2.08,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 34,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 41,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3.5-plus-02-15": {
+      "id": "qwen/qwen3.5-plus-02-15",
+      "name": "Qwen: Qwen3.5 Plus 2026-02-15",
+      "tier": "low",
+      "pricePerMInput": 0.26,
+      "pricePerMOutput": 1.56,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3-vl-235b-a22b-thinking": {
+      "id": "qwen/qwen3-vl-235b-a22b-thinking",
+      "name": "Qwen: Qwen3 VL 235B A22B Thinking",
+      "tier": "low",
+      "pricePerMInput": 0.26,
+      "pricePerMOutput": 2.6,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 47,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "z-ai/glm-4.6v": {
+      "id": "z-ai/glm-4.6v",
+      "name": "Z.ai: GLM 4.6V",
+      "tier": "low",
+      "pricePerMInput": 0.3,
+      "pricePerMOutput": 0.8999999999999999,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 37,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "amazon/nova-2-lite-v1": {
+      "id": "amazon/nova-2-lite-v1",
+      "name": "Amazon: Nova 2 Lite",
+      "tier": "low",
+      "pricePerMInput": 0.3,
+      "pricePerMOutput": 2.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 37,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "google/gemini-2.5-flash-image": {
+      "id": "google/gemini-2.5-flash-image",
+      "name": "Google: Nano Banana (Gemini 2.5 Flash Image)",
+      "tier": "low",
+      "pricePerMInput": 0.3,
+      "pricePerMOutput": 2.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 27,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "google/gemini-2.5-flash": {
+      "id": "google/gemini-2.5-flash",
+      "name": "Google: Gemini 2.5 Flash",
+      "tier": "low",
+      "pricePerMInput": 0.3,
+      "pricePerMOutput": 2.5,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 39,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "moonshotai/kimi-k2.5": {
+      "id": "moonshotai/kimi-k2.5",
+      "name": "MoonshotAI: Kimi K2.5",
+      "tier": "low",
+      "pricePerMInput": 0.3827,
+      "pricePerMOutput": 1.72,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 42,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "qwen/qwen3.5-397b-a17b": {
+      "id": "qwen/qwen3.5-397b-a17b",
+      "name": "Qwen: Qwen3.5 397B A17B",
+      "tier": "low",
+      "pricePerMInput": 0.39,
+      "pricePerMOutput": 2.34,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 31,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "xiaomi/mimo-v2-omni": {
+      "id": "xiaomi/mimo-v2-omni",
+      "name": "Xiaomi: MiMo-V2-Omni",
+      "tier": "low",
+      "pricePerMInput": 0.39999999999999997,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 33,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 36,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "mistralai/mistral-medium-3.1": {
+      "id": "mistralai/mistral-medium-3.1",
+      "name": "Mistral: Mistral Medium 3.1",
+      "tier": "low",
+      "pricePerMInput": 0.39999999999999997,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 32,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "mistralai/mistral-medium-3": {
+      "id": "mistralai/mistral-medium-3",
+      "name": "Mistral: Mistral Medium 3",
+      "tier": "low",
+      "pricePerMInput": 0.39999999999999997,
+      "pricePerMOutput": 2,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 28,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 38,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "openai/gpt-4.1-mini": {
+      "id": "openai/gpt-4.1-mini",
+      "name": "OpenAI: GPT-4.1 Mini",
+      "tier": "low",
+      "pricePerMInput": 0.39999999999999997,
+      "pricePerMOutput": 1.5999999999999999,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 30,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 43,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 37,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    },
+    "baidu/ernie-4.5-vl-424b-a47b": {
+      "id": "baidu/ernie-4.5-vl-424b-a47b",
+      "name": "Baidu: ERNIE 4.5 VL 424B A47B ",
+      "tier": "low",
+      "pricePerMInput": 0.42,
+      "pricePerMOutput": 1.25,
+      "cases": [
+        {
+          "caseName": "No allergens — chicken salad",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 30,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Several allergens — sweet cookie",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 35,
+          "isRateLimit": false,
+          "isUnavailable": false
+        },
+        {
+          "caseName": "Tricky reasoning — \"Gluten Free\" flour blend",
+          "error": "Insufficient credits. Add more using https://openrouter.ai/settings/credits",
+          "status": 402,
+          "elapsed": 40,
+          "isRateLimit": false,
+          "isUnavailable": false
+        }
+      ]
+    }
+  }
+}
